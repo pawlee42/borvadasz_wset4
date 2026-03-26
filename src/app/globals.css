@@ -108,7 +108,7 @@ input[type="range"]:focus-visible::-moz-range-thumb {
   }
 
   /* Hide navigation elements */
-  header, nav, .print\\:hidden {
+  header, nav, [data-print-hide] {
     display: none !important;
   }
 
