@@ -18,6 +18,7 @@ export default function LeaderDashboard() {
   const [submissionCounts, setSubmissionCounts] = useState<Record<string, number>>({})
   const [participantId, setParticipantId] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const pid = localStorage.getItem(`bv_participant_${code}`)
@@ -76,7 +77,6 @@ export default function LeaderDashboard() {
         if (data.length > 0) {
           setSessionId(data[0].session_id)
         } else {
-          // Fetch session id from a participant lookup
           const supabase = createClient()
           const { data: p } = await supabase
             .from('participants')
@@ -86,6 +86,7 @@ export default function LeaderDashboard() {
           if (p) setSessionId(p.session_id)
         }
       }
+      setLoading(false)
     }
     init()
   }, [participantId, code])
@@ -195,7 +196,11 @@ export default function LeaderDashboard() {
           </Link>
         </div>
 
-        {wines.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-12 text-muted">
+            <p>Betöltés...</p>
+          </div>
+        ) : wines.length === 0 ? (
           <div className="text-center py-12 text-muted">
             <p className="text-lg mb-2">Még nincsenek borok hozzáadva</p>
             <Link href={`/session/${code}/leader/wines`}>

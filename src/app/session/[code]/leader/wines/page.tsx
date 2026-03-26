@@ -14,6 +14,7 @@ export default function ManageWinesPage() {
   const router = useRouter()
   const [wines, setWines] = useState<Wine[]>([])
   const [participantId, setParticipantId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const pid = localStorage.getItem(`bv_participant_${code}`)
@@ -28,6 +29,7 @@ export default function ManageWinesPage() {
   const fetchWines = useCallback(async () => {
     const res = await fetch(`/api/session/${code}/wines`)
     if (res.ok) setWines(await res.json())
+    setLoading(false)
   }, [code])
 
   useEffect(() => {

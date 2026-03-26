@@ -16,6 +16,7 @@ export default function TastingPage() {
   const [wines, setWines] = useState<Wine[]>([])
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const pid = localStorage.getItem(`bv_participant_${code}`)
@@ -32,6 +33,7 @@ export default function TastingPage() {
       const data: Wine[] = await res.json()
       setWines(data)
     }
+    setLoading(false)
   }, [code])
 
   // Initial load
@@ -111,7 +113,11 @@ export default function TastingPage() {
       />
 
       <div className="max-w-3xl mx-auto p-4">
-        {!activeWine ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <p className="text-muted">Betöltés...</p>
+          </div>
+        ) : !activeWine ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <span className="text-5xl mb-4">&#127863;</span>
             <h2 className="text-lg font-semibold mb-1">
