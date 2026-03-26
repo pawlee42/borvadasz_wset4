@@ -39,12 +39,18 @@ export default function TastingPage() {
     if (participantId) fetchWines()
   }, [participantId, fetchWines])
 
+  // Track sessionId separately so realtime sub doesn't re-create on every wines change
+  const [sessionId, setSessionId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (wines.length > 0 && wines[0].session_id && !sessionId) {
+      setSessionId(wines[0].session_id)
+    }
+  }, [wines, sessionId])
+
   // Realtime subscription to wine changes
   useEffect(() => {
-    if (!participantId || wines.length === 0) return
-
-    const sessionId = wines[0]?.session_id
-    if (!sessionId) return
+    if (!participantId || !sessionId) return
 
     const supabase = createClient()
     const channel = supabase
@@ -67,7 +73,7 @@ export default function TastingPage() {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [participantId, wines, fetchWines])
+  }, [participantId, sessionId, fetchWines])
 
   const activeWine = wines.find((w) => w.is_active)
 

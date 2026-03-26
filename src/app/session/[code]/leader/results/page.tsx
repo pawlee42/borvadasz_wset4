@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import type { Wine } from '@/lib/types/database'
 import type { SATEvaluation } from '@/lib/types/sat'
 import { useSession } from '@/lib/hooks/useSession'
@@ -53,14 +54,6 @@ export default function ResultsPage() {
     window.print()
   }, [])
 
-  if (!isLeader) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-stone-500">Nincs jogosultságod az eredmények megtekintéséhez.</p>
-      </div>
-    )
-  }
-
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -80,13 +73,23 @@ export default function ResultsPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-8 p-4 print:max-w-none print:p-0">
       <div className="flex items-center justify-between print:hidden">
-        <h1 className="text-xl font-bold text-stone-800">Kóstolás eredményei</h1>
-        <button
-          onClick={handlePrint}
-          className="rounded-md bg-stone-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-700"
-        >
-          PDF letöltése / Nyomtatás
-        </button>
+        <div className="flex items-center gap-3">
+          <Link
+            href={isLeader ? `/session/${code}/leader` : `/session/${code}/tasting`}
+            className="text-sm text-stone-500 hover:text-stone-700"
+          >
+            &larr; Vissza
+          </Link>
+          <h1 className="text-xl font-bold text-stone-800">Kóstolás eredményei</h1>
+        </div>
+        {isLeader && (
+          <button
+            onClick={handlePrint}
+            className="rounded-md bg-stone-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-700"
+          >
+            PDF letöltése / Nyomtatás
+          </button>
+        )}
       </div>
 
       {wineResults.map((wr) => (
