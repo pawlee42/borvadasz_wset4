@@ -4,6 +4,7 @@ import {
   ResponsiveContainer,
   ScatterChart,
   XAxis,
+  YAxis,
   Scatter,
   Cell,
   ReferenceArea,
@@ -50,6 +51,7 @@ export default function FinishChart({ data }: FinishChartProps) {
               strokeOpacity={0}
             />
           ))}
+          <YAxis type="number" dataKey="y" domain={[0, 1]} hide />
           <XAxis
             type="number"
             dataKey="x"
