@@ -42,7 +42,7 @@ export default function WineResultCard({
   return (
     <div
       id={`wine-result-${wine.id}`}
-      className="rounded-lg border border-stone-200 bg-white p-6 print:break-inside-avoid print:shadow-none"
+      className="rounded-lg border border-stone-200 bg-white p-4 sm:p-6 print:break-inside-avoid print:shadow-none"
     >
       {/* Wine header */}
       <div className="mb-4 flex items-start gap-4">

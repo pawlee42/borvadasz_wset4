@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { OptionSelector } from '@/components/sat-form/OptionSelector'
@@ -36,8 +36,31 @@ export function WineForm({ onSubmit, initialData }: WineFormProps) {
   const [wineType, setWineType] = useState<WineType>(
     initialData?.wine_type ?? 'red'
   )
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    initialData?.image_url ?? null
+  )
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
 
   const isEditing = !!(initialData?.name)
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      if (res.ok) {
+        const { url } = await res.json()
+        setImageUrl(url)
+      }
+    } finally {
+      setUploading(false)
+    }
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -47,7 +70,7 @@ export function WineForm({ onSubmit, initialData }: WineFormProps) {
       vintage: vintage ? parseInt(vintage, 10) : null,
       region,
       wine_type: wineType,
-      image_url: initialData?.image_url ?? null,
+      image_url: imageUrl,
     })
   }
 
@@ -98,6 +121,47 @@ export function WineForm({ onSubmit, initialData }: WineFormProps) {
         value={wineType}
         onChange={(v) => setWineType(v as WineType)}
       />
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Fotó (opcionális)</label>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
+        <div className="flex items-center gap-3">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt="Bor fotó"
+              className="h-16 w-12 rounded object-cover border border-border"
+            />
+          ) : (
+            <div className="flex h-16 w-12 items-center justify-center rounded bg-secondary text-lg text-muted">
+              🍷
+            </div>
+          )}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={uploading}
+            onClick={() => fileRef.current?.click()}
+          >
+            {uploading ? 'Feltöltés...' : imageUrl ? 'Csere' : 'Kép feltöltése'}
+          </Button>
+          {imageUrl && (
+            <button
+              type="button"
+              onClick={() => setImageUrl(null)}
+              className="text-xs text-muted hover:text-destructive"
+            >
+              Törlés
+            </button>
+          )}
+        </div>
+      </div>
       <Button type="submit" className="w-full">
         {isEditing ? 'Mentés' : 'Bor hozzáadása'}
       </Button>

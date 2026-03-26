@@ -56,7 +56,7 @@ export function Slider({
                   />
                   <span
                     className={cn(
-                      'text-[10px] leading-tight text-center whitespace-nowrap',
+                      'text-[11px] leading-tight text-center whitespace-nowrap',
                       isActive
                         ? 'text-primary font-bold'
                         : 'text-muted'
