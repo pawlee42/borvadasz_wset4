@@ -164,6 +164,7 @@ export default function TastingPage() {
             </Card>
 
             <SATForm
+              key={activeWine.id}
               wineType={activeWine.wine_type}
               onSubmit={handleSubmit}
               disabled={submitting}

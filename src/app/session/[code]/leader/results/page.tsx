@@ -72,7 +72,7 @@ export default function ResultsPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 p-4 print:max-w-none print:p-0">
-      <div className="flex items-center justify-between print:hidden">
+      <div className="flex items-center justify-between" data-print-hide>
         <div className="flex items-center gap-3">
           <Link
             href={isLeader ? `/session/${code}/leader` : `/session/${code}/tasting`}
