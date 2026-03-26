@@ -16,7 +16,7 @@ interface RadarProfileProps {
 export default function RadarProfile({ data }: RadarProfileProps) {
   return (
     <div data-chart-id="radar">
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={250}>
         <RadarChart data={data} cx="50%" cy="50%" outerRadius="75%">
           <PolarGrid stroke="#d6d3d1" />
           <PolarAngleAxis

@@ -24,7 +24,7 @@ export default function DistributionBar({ data }: DistributionBarProps) {
         <BarChart
           data={data.counts}
           layout="vertical"
-          margin={{ top: 0, right: 20, bottom: 0, left: 80 }}
+          margin={{ top: 0, right: 20, bottom: 0, left: 0 }}
         >
           <YAxis
             type="category"
