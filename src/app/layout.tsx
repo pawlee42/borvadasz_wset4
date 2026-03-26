@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
@@ -7,17 +7,18 @@ const inter = Inter({
   variable: '--font-sans',
 })
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#5c3a1e',
+}
+
 export const metadata: Metadata = {
   title: 'Borvadász Társaság - Borkóstoló',
   description:
     'Szisztematikus borkóstoló alkalmazás a Borvadász Társaság tagjainak. Értékeld a borokat a SAT módszer szerint.',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
-  themeColor: '#5c3a1e',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
