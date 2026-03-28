@@ -124,7 +124,7 @@ export default function TastingPage() {
               Várd a következő bort...
             </h2>
             <p className="text-sm text-muted">
-              A vezető hamarosan aktiválja a következő bort
+              Az ügyvezető hamarosan aktiválja a következő bort
             </p>
           </div>
         ) : submitted ? (

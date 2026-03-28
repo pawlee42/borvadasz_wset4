@@ -34,7 +34,7 @@ export function SessionHeader({ code, role, wineName }: SessionHeaderProps) {
                 : 'bg-accent/20 text-accent'
             )}
           >
-            {role === 'leader' ? 'Vezető' : 'Résztvevő'}
+            {role === 'leader' ? 'Ügyvezető' : 'Résztvevő'}
           </span>
         </div>
       </div>

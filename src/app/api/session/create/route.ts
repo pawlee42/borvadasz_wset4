@@ -66,7 +66,7 @@ export async function POST(request: Request) {
 
     if (participantError || !participant) {
       return NextResponse.json(
-        { error: 'Nem sikerült regisztrálni a vezetőt' },
+        { error: 'Nem sikerült regisztrálni az ügyvezetőt' },
         { status: 500 }
       )
     }

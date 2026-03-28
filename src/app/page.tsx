@@ -28,24 +28,6 @@ export default function LandingPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Kóstoló létrehozása</CardTitle>
-            <CardDescription>
-              Indíts egy új borkóstoló munkamenetet vezetőként
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button
-              className="w-full"
-              size="lg"
-              onClick={() => router.push('/session/create')}
-            >
-              Kóstoló létrehozása
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
             <CardTitle>Csatlakozás</CardTitle>
             <CardDescription>
               Add meg a 6 karakteres kódot a csatlakozáshoz
@@ -66,6 +48,15 @@ export default function LandingPage() {
             </form>
           </CardContent>
         </Card>
+
+        <div className="pt-8 text-center">
+          <button
+            onClick={() => router.push('/session/create')}
+            className="text-xs text-muted hover:text-foreground transition-colors"
+          >
+            Ügyvezető
+          </button>
+        </div>
       </div>
     </main>
   )

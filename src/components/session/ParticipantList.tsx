@@ -37,7 +37,7 @@ export function ParticipantList({
               <span className="truncate">
                 {p.name}
                 {p.is_leader && (
-                  <span className="ml-1.5 text-xs text-muted">(vezető)</span>
+                  <span className="ml-1.5 text-xs text-muted">(ügyvezető)</span>
                 )}
               </span>
             </li>

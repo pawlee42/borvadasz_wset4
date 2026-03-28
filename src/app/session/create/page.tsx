@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 export default function CreateSessionPage() {
   const router = useRouter()
   const [name, setName] = useState('')
+  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -16,6 +17,12 @@ export default function CreateSessionPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
+
+    if (password !== 'borvadasz42') {
+      setError('Hibás jelszó')
+      setLoading(false)
+      return
+    }
 
     try {
       const res = await fetch('/api/session/create', {
@@ -49,6 +56,16 @@ export default function CreateSessionPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Admin jelszó</label>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Jelszó"
+                required
+              />
+            </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Neved</label>
               <Input

@@ -63,7 +63,7 @@ export async function POST(
     const supabase = createServiceClient()
 
     if (!(await verifyLeader(supabase, participantId))) {
-      return NextResponse.json({ error: 'Csak a vezető adhat hozzá bort' }, { status: 403 })
+      return NextResponse.json({ error: 'Csak az ügyvezető adhat hozzá bort' }, { status: 403 })
     }
 
     const session = await getSession(supabase, code)
@@ -122,7 +122,7 @@ export async function PUT(
     const supabase = createServiceClient()
 
     if (!(await verifyLeader(supabase, participantId))) {
-      return NextResponse.json({ error: 'Csak a vezető módosíthatja a borokat' }, { status: 403 })
+      return NextResponse.json({ error: 'Csak az ügyvezető módosíthatja a borokat' }, { status: 403 })
     }
 
     const session = await getSession(supabase, code)
@@ -192,7 +192,7 @@ export async function DELETE(
     const supabase = createServiceClient()
 
     if (!(await verifyLeader(supabase, participantId))) {
-      return NextResponse.json({ error: 'Csak a vezető törölhet bort' }, { status: 403 })
+      return NextResponse.json({ error: 'Csak az ügyvezető törölhet bort' }, { status: 403 })
     }
 
     const session = await getSession(supabase, code)
