@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import type { Wine } from '@/lib/types/database'
+import type { Wine, Session } from '@/lib/types/database'
 import type { SATEvaluation } from '@/lib/types/sat'
 import { useSession } from '@/lib/hooks/useSession'
 import WineResultCard from '@/components/results/WineResultCard'
@@ -18,11 +18,18 @@ export default function ResultsPage() {
   const code = params.code
   const { isLeader } = useSession(code)
   const [wineResults, setWineResults] = useState<WineWithEvaluations[]>([])
+  const [sessionInfo, setSessionInfo] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchResults() {
       try {
+        // Fetch session info
+        const sessionRes = await fetch(`/api/session/${code}`)
+        if (sessionRes.ok) {
+          setSessionInfo(await sessionRes.json())
+        }
+
         const winesRes = await fetch(`/api/session/${code}/wines`)
         if (!winesRes.ok) return
         const wines: Wine[] = await winesRes.json()
@@ -91,6 +98,24 @@ export default function ResultsPage() {
           </button>
         )}
       </div>
+
+      {sessionInfo && (sessionInfo.title || sessionInfo.event_date || sessionInfo.location) && (
+        <div className="rounded-lg border border-stone-200 bg-white p-4 sm:p-6 flex items-center gap-4">
+          <img src="/logo-circle.png" alt="BT" className="h-16 w-16 rounded-full print:h-12 print:w-12" />
+          <div>
+            {sessionInfo.title && (
+              <h2 className="text-lg font-bold text-stone-800">{sessionInfo.title}</h2>
+            )}
+            <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-sm text-stone-500 mt-0.5">
+              {sessionInfo.event_date && (
+                <span>{new Date(sessionInfo.event_date).toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              )}
+              {sessionInfo.location && <span>{sessionInfo.location}</span>}
+              <span>Ügyvezető: {sessionInfo.leader_name}</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {wineResults.map((wr) => (
         <WineResultCard

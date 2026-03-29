@@ -8,7 +8,7 @@ import { SessionHeader } from '@/components/session/SessionHeader'
 import { WineCard } from '@/components/session/WineCard'
 import { ParticipantList } from '@/components/session/ParticipantList'
 import { Button } from '@/components/ui/button'
-import type { Wine, Participant } from '@/lib/types/database'
+import type { Wine, Participant, Session } from '@/lib/types/database'
 
 export default function LeaderDashboard() {
   const { code } = useParams<{ code: string }>()
@@ -18,6 +18,7 @@ export default function LeaderDashboard() {
   const [submissionCounts, setSubmissionCounts] = useState<Record<string, number>>({})
   const [participantId, setParticipantId] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [sessionInfo, setSessionInfo] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -28,6 +29,10 @@ export default function LeaderDashboard() {
       return
     }
     setParticipantId(pid)
+
+    fetch(`/api/session/${code}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => { if (d) setSessionInfo(d) })
   }, [code, router])
 
   const fetchWines = useCallback(async () => {
@@ -184,7 +189,13 @@ export default function LeaderDashboard() {
 
   return (
     <div className="min-h-dvh bg-background">
-      <SessionHeader code={code} role="leader" wineName={activeWine?.name} />
+      <SessionHeader
+        code={code}
+        role="leader"
+        wineName={activeWine?.name}
+        sessionTitle={sessionInfo?.title ?? undefined}
+        eventDate={sessionInfo?.event_date ?? undefined}
+      />
 
       <div className="max-w-3xl mx-auto p-4 space-y-6">
         <div className="flex items-center justify-between">

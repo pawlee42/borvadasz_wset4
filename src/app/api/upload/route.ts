@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
+import sharp from 'sharp'
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/bmp', 'image/tiff', 'image/gif', 'image/avif']
 const MAX_SIZE = 5 * 1024 * 1024 // 5MB
+const MAX_HEIGHT = 800
 
 export async function POST(request: Request) {
   try {
@@ -28,15 +30,18 @@ export async function POST(request: Request) {
     }
 
     const supabase = createServiceClient()
-    const ext = file.name.split('.').pop() ?? 'jpg'
-    const filename = `${crypto.randomUUID()}.${ext}`
+    const filename = `${crypto.randomUUID()}.jpg`
 
-    const buffer = Buffer.from(await file.arrayBuffer())
+    const rawBuffer = Buffer.from(await file.arrayBuffer())
+    const buffer = await sharp(rawBuffer)
+      .resize({ height: MAX_HEIGHT, withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toBuffer()
 
     const { error: uploadError } = await supabase.storage
       .from('wine-images')
       .upload(filename, buffer, {
-        contentType: file.type,
+        contentType: 'image/jpeg',
         upsert: false,
       })
 

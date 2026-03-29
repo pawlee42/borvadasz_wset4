@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { SessionHeader } from '@/components/session/SessionHeader'
 import { SATForm } from '@/components/sat-form/SATForm'
 import { Card, CardContent } from '@/components/ui/card'
-import type { Wine } from '@/lib/types/database'
+import type { Wine, Session } from '@/lib/types/database'
 import type { SATEvaluation } from '@/lib/types/sat'
 
 export default function TastingPage() {
@@ -16,6 +16,7 @@ export default function TastingPage() {
   const [wines, setWines] = useState<Wine[]>([])
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [sessionInfo, setSessionInfo] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -25,6 +26,10 @@ export default function TastingPage() {
       return
     }
     setParticipantId(pid)
+
+    fetch(`/api/session/${code}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => { if (d) setSessionInfo(d) })
   }, [code, router])
 
   const fetchWines = useCallback(async () => {
@@ -110,6 +115,8 @@ export default function TastingPage() {
         code={code}
         role="participant"
         wineName={activeWine?.name}
+        sessionTitle={sessionInfo?.title ?? undefined}
+        eventDate={sessionInfo?.event_date ?? undefined}
       />
 
       <div className="max-w-3xl mx-auto p-4">

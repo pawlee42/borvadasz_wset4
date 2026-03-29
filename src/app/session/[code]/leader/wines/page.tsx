@@ -7,13 +7,14 @@ import { SessionHeader } from '@/components/session/SessionHeader'
 import { WineForm } from '@/components/session/WineForm'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import type { Wine } from '@/lib/types/database'
+import type { Wine, Session } from '@/lib/types/database'
 
 export default function ManageWinesPage() {
   const { code } = useParams<{ code: string }>()
   const router = useRouter()
   const [wines, setWines] = useState<Wine[]>([])
   const [participantId, setParticipantId] = useState<string | null>(null)
+  const [sessionInfo, setSessionInfo] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -24,6 +25,10 @@ export default function ManageWinesPage() {
       return
     }
     setParticipantId(pid)
+
+    fetch(`/api/session/${code}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => { if (d) setSessionInfo(d) })
   }, [code, router])
 
   const fetchWines = useCallback(async () => {
@@ -69,7 +74,12 @@ export default function ManageWinesPage() {
 
   return (
     <div className="min-h-dvh bg-background">
-      <SessionHeader code={code} role="leader" />
+      <SessionHeader
+        code={code}
+        role="leader"
+        sessionTitle={sessionInfo?.title ?? undefined}
+        eventDate={sessionInfo?.event_date ?? undefined}
+      />
 
       <div className="max-w-3xl mx-auto p-4 space-y-6">
         <div className="flex items-center justify-between">

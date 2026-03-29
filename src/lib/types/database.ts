@@ -4,6 +4,9 @@ export interface Session {
   id: string
   code: string
   leader_name: string
+  title: string | null
+  event_date: string | null
+  location: string | null
   status: 'active' | 'completed' | 'archived'
   created_at: string
 }

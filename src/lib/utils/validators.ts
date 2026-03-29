@@ -2,6 +2,9 @@ import { z } from 'zod'
 
 export const createSessionSchema = z.object({
   leaderName: z.string().min(1).max(100).trim(),
+  title: z.string().max(200).trim().optional(),
+  eventDate: z.string().optional(),
+  location: z.string().max(200).trim().optional(),
 })
 
 export const joinSessionSchema = z.object({
