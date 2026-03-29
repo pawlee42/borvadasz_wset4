@@ -50,7 +50,9 @@ export function WineCard({
               className="w-full h-full object-cover"
             />
           ) : (
-            <span className="text-2xl text-muted">🍷</span>
+            <svg viewBox="0 0 24 40" fill="currentColor" className="h-10 w-6 text-stone-300">
+              <path d="M9 0h6v2h-6zM10 2h4v6a6 6 0 0 1 4 5.5v20a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 6 33.5v-20A6 6 0 0 1 10 8z" />
+            </svg>
           )}
         </div>
         <div className="flex-1 min-w-0">

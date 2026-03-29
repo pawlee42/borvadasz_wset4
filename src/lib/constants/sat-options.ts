@@ -42,11 +42,11 @@ export const NOSE = {
 } as const
 
 export const PALATE = {
-  sweetness: ['Száraz', 'Félszáraz', 'Közepes-száraz', 'Közepes-édes', 'Édes', 'Nagyon édes'],
+  sweetness: ['Száraz', 'Félszáraz', 'Félédes', 'Édes', 'Nagyon édes'],
   acidity: ['Alacsony', 'Közepes(-)', 'Közepes', 'Közepes(+)', 'Magas'],
   tanninLevel: ['Alacsony', 'Közepes(-)', 'Közepes', 'Közepes(+)', 'Magas'],
   tanninNaturePlaceholder: 'pl. érett, lágy, sima, éretlen, zöld, durva, krétaszerű, finomszemcsés...',
-  alcohol: ['Alacsony (<11%)', 'Közepes (11-14%)', 'Magas (>14%)'],
+  alcohol: ['Alacsony', 'Közepes(-)', 'Közepes', 'Közepes(+)', 'Magas'],
   body: ['Könnyű', 'Közepes(-)', 'Közepes', 'Közepes(+)', 'Testes'],
   flavourIntensity: ['Enyhe', 'Közepes(-)', 'Közepes', 'Közepes(+)', 'Kifejezett'],
   flavourPlaceholder: 'pl. gyümölcsös, fűszeres, vanília, tölgyfa, ásványos...',
@@ -61,19 +61,27 @@ export const PALATE = {
 } as const
 
 export const CONCLUSIONS = {
-  quality: ['Hibás', 'Gyenge', 'Elfogadható', 'Jó', 'Nagyon jó', 'Kiváló'],
+  quality: ['Elfogadhatatlan', 'Gyenge', 'Átlagos', 'Nagyon jó', 'Kiváló', 'Rendkívüli'],
+  qualityRanges: [
+    { min: 50, max: 59, label: 'Elfogadhatatlan' },
+    { min: 60, max: 69, label: 'Gyenge' },
+    { min: 70, max: 79, label: 'Átlagos' },
+    { min: 80, max: 89, label: 'Nagyon jó' },
+    { min: 90, max: 95, label: 'Kiváló' },
+    { min: 96, max: 100, label: 'Rendkívüli' },
+  ],
   readiness: [
     { value: 'too_young', label: 'Túl fiatal' },
-    { value: 'can_drink_ageing', label: 'Most idd, de érlelhető' },
-    { value: 'drink_now', label: 'Most idd, nem fejlődik tovább' },
-    { value: 'too_old', label: 'Túl öreg' },
+    { value: 'can_drink_ageing', label: 'Iható' },
+    { value: 'drink_now', label: 'Csúcson' },
+    { value: 'too_old', label: 'Hanyatló' },
   ],
   explanationPlaceholder: 'pl. a bor minőségét alátámasztó érvek, egyensúly, összetettség...',
 } as const
 
 export const SECTION_LABELS = {
-  appearance: 'Megjelenés',
+  appearance: 'Szín',
   nose: 'Illat',
-  palate: 'Ízlelés',
+  palate: 'Ízvilág',
   conclusions: 'Következtetések',
 } as const

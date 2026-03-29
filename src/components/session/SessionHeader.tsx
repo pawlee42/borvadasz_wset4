@@ -13,9 +13,11 @@ export function SessionHeader({ code, role, wineName }: SessionHeaderProps) {
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
       <div className="flex h-14 items-center justify-between px-4 max-w-3xl mx-auto">
         <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-            BT
-          </span>
+          <img
+            src="/logo-circle.png"
+            alt="BT"
+            className="h-9 w-9 rounded-full"
+          />
           {wineName && (
             <span className="text-sm font-medium text-foreground truncate max-w-[150px]">
               {wineName}

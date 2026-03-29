@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   title: 'Borvadász Társaság - Borkóstoló',
   description:
     'Szisztematikus borkóstoló alkalmazás a Borvadász Társaság tagjainak. Értékeld a borokat a SAT módszer szerint.',
+  icons: {
+    icon: '/favicon.png',
+    apple: '/icon-192.png',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',

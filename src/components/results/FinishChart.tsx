@@ -1,80 +1,71 @@
 'use client'
 
-import {
-  ResponsiveContainer,
-  ScatterChart,
-  XAxis,
-  YAxis,
-  Scatter,
-  Cell,
-  ReferenceArea,
-} from 'recharts'
 import type { FinishData } from '@/lib/utils/chart-data'
 import { PALATE } from '@/lib/constants/sat-options'
-
-const ZONE_COLORS = [
-  'rgba(220, 140, 100, 0.15)',
-  'rgba(200, 150, 110, 0.12)',
-  'rgba(180, 160, 120, 0.10)',
-  'rgba(160, 140, 100, 0.12)',
-  'rgba(139, 94, 60, 0.15)',
-]
 
 interface FinishChartProps {
   data: FinishData
 }
 
+function getZoneColor(seconds: number): string {
+  if (seconds < 3) return '#d6ccc2'
+  if (seconds < 5) return '#c2a98e'
+  if (seconds < 8) return '#a68a6b'
+  if (seconds < 10) return '#8b6f4e'
+  return '#6b4f2e'
+}
+
+function getZoneLabel(seconds: number): string {
+  const zone = PALATE.finishLabels.find((z) => seconds >= z.min && seconds < z.max)
+  return zone?.label ?? 'Hosszú'
+}
+
 export default function FinishChart({ data }: FinishChartProps) {
-  const jitter = () => 0.3 + Math.random() * 0.4
-  const points = data.values.map((v, i) => ({ x: v, y: jitter(), key: `f-${i}` }))
-  const medianPoint = [{ x: data.median, y: 0.5 }]
+  const sorted = [...data.values].sort((a, b) => a - b)
+  const max = 15
 
   return (
     <div data-chart-id="finish">
-      <div className="mb-2 text-center">
-        <span className="text-2xl font-bold text-stone-800">
-          {data.mean.toFixed(1)} mp
-        </span>
-        <span className="ml-2 text-sm text-stone-500">
-          {data.categoryLabel}
-        </span>
+      <p className="mb-1 text-xs font-medium text-stone-600">Utóíz (másodperc)</p>
+
+      <div className="space-y-1">
+        {sorted.map((v, i) => {
+          const pct = (v / max) * 100
+          return (
+            <div key={i} className="flex items-center gap-2 h-5">
+              <div className="flex-1 relative h-[2px] bg-stone-100 rounded">
+                <div
+                  className="absolute left-0 top-0 h-full rounded"
+                  style={{ width: `${pct}%`, backgroundColor: getZoneColor(v) }}
+                />
+                <div
+                  className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border-2 border-white"
+                  style={{ left: `${pct}%`, backgroundColor: getZoneColor(v), transform: 'translate(-50%, -50%)' }}
+                />
+              </div>
+              <span className="text-[11px] text-stone-600 w-8 text-right tabular-nums">
+                {v.toFixed(1)}
+              </span>
+            </div>
+          )
+        })}
       </div>
-      <ResponsiveContainer width="100%" height={80}>
-        <ScatterChart margin={{ top: 5, right: 10, bottom: 20, left: 10 }}>
-          {PALATE.finishLabels.map((zone, i) => (
-            <ReferenceArea
-              key={i}
-              x1={zone.min}
-              x2={zone.max}
-              fill={ZONE_COLORS[i]}
-              fillOpacity={1}
-              strokeOpacity={0}
-            />
-          ))}
-          <YAxis type="number" dataKey="y" domain={[0, 1]} hide />
-          <XAxis
-            type="number"
-            dataKey="x"
-            domain={[0, 15]}
-            ticks={[...PALATE.finishLabels.map((z) => z.min as number), 15]}
-            tickFormatter={(v: number) => {
-              const label = PALATE.finishLabels.find((z) => z.min === v)
-              return label?.label ?? ''
-            }}
-            tick={{ fontSize: 9, fill: '#78716c' }}
-            axisLine={{ stroke: '#d6d3d1' }}
-            tickLine={false}
-          />
-          <Scatter data={points} shape="circle">
-            {points.map((_, i) => (
-              <Cell key={i} fill="#8b5e3c" r={5} opacity={0.7} />
-            ))}
-          </Scatter>
-          <Scatter data={medianPoint} shape="diamond">
-            <Cell fill="#c2703e" r={7} />
-          </Scatter>
-        </ScatterChart>
-      </ResponsiveContainer>
+
+      <div className="mt-3 pt-2 border-t border-stone-200 flex items-center justify-between">
+        <div>
+          <span className="text-xl font-bold text-stone-800">{data.mean.toFixed(1)} mp</span>
+          <span className="ml-2 text-sm text-stone-500">{data.categoryLabel}</span>
+        </div>
+        <div className="text-xs text-stone-400">
+          medián: {data.median.toFixed(1)} mp
+        </div>
+      </div>
+
+      <div className="flex justify-between mt-2 text-[10px] text-stone-400">
+        {PALATE.finishLabels.map((z) => (
+          <span key={z.label}>{z.label}</span>
+        ))}
+      </div>
     </div>
   )
 }

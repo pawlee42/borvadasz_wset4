@@ -21,9 +21,16 @@ export default function LandingPage() {
   return (
     <main className="min-h-dvh flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
-        <div className="text-center space-y-2 mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Borvadász Társaság</h1>
-          <p className="text-muted text-sm">Borkóstoló Alkalmazás</p>
+        <div className="text-center space-y-4 mb-8">
+          <img
+            src="/logo-circle.png"
+            alt="Borvadász Társaság"
+            className="mx-auto h-32 w-32 rounded-full"
+          />
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold tracking-tight">Borvadász Társaság</h1>
+            <p className="text-muted text-sm">...csak szelektíven</p>
+          </div>
         </div>
 
         <Card>

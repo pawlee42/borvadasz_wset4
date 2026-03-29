@@ -5,6 +5,7 @@ import {
   RadarChart,
   PolarGrid,
   PolarAngleAxis,
+  PolarRadiusAxis,
   Radar,
 } from 'recharts'
 import type { RadarData } from '@/lib/utils/chart-data'
@@ -23,6 +24,7 @@ export default function RadarProfile({ data }: RadarProfileProps) {
             dataKey="dimension"
             tick={{ fontSize: 11, fill: '#57534e' }}
           />
+          <PolarRadiusAxis domain={[0, 4]} tick={false} axisLine={false} />
           <Radar
             dataKey="value"
             stroke="#8b5e3c"

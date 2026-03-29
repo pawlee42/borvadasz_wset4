@@ -31,11 +31,11 @@ export const evaluationSchema = z.object({
     development: z.enum(['youthful', 'developing', 'fully_developed', 'tired']),
   }),
   palate: z.object({
-    sweetness: z.number().int().min(0).max(5),
+    sweetness: z.number().int().min(0).max(4),
     acidity: z.number().int().min(0).max(4),
     tanninLevel: z.number().int().min(0).max(4).nullable(),
     tanninNature: z.string().max(500).nullable(),
-    alcohol: z.number().int().min(0).max(2),
+    alcohol: z.number().int().min(0).max(4),
     body: z.number().int().min(0).max(4),
     flavourIntensity: z.number().int().min(0).max(4),
     flavourCharacteristics: z.string().max(1000),
@@ -43,7 +43,7 @@ export const evaluationSchema = z.object({
     observations: z.string().max(500),
   }),
   conclusions: z.object({
-    quality: z.number().int().min(0).max(5),
+    quality: z.number().int().min(50).max(100),
     readiness: z.enum(['too_young', 'can_drink_ageing', 'drink_now', 'too_old']),
     explanation: z.string().max(2000),
   }),

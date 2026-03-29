@@ -148,17 +148,32 @@ export default function TastingPage() {
         ) : (
           <>
             <Card className="mb-4">
-              <CardContent className="p-4">
-                <p className="text-xs text-muted">{activeWine.producer}</p>
-                <p className="font-semibold">{activeWine.name}</p>
-                <div className="flex items-center gap-2 text-xs text-muted mt-0.5">
-                  {activeWine.vintage && <span>{activeWine.vintage}</span>}
-                  {activeWine.region && (
-                    <>
-                      {activeWine.vintage && <span>&middot;</span>}
-                      <span>{activeWine.region}</span>
-                    </>
-                  )}
+              <CardContent className="p-4 flex items-start gap-4">
+                {activeWine.image_url ? (
+                  <img
+                    src={activeWine.image_url}
+                    alt={activeWine.name}
+                    className="h-24 w-16 rounded object-cover flex-shrink-0"
+                  />
+                ) : (
+                  <div className="flex h-24 w-16 items-center justify-center rounded bg-stone-100 text-3xl text-stone-300 flex-shrink-0">
+                    <svg viewBox="0 0 24 40" fill="currentColor" className="h-12 w-8">
+                      <path d="M9 0h6v2h-6zM10 2h4v6a6 6 0 0 1 4 5.5v20a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 6 33.5v-20A6 6 0 0 1 10 8z" />
+                    </svg>
+                  </div>
+                )}
+                <div>
+                  <p className="text-xs text-muted">{activeWine.producer}</p>
+                  <p className="font-semibold">{activeWine.name}</p>
+                  <div className="flex items-center gap-2 text-xs text-muted mt-0.5">
+                    {activeWine.vintage && <span>{activeWine.vintage}</span>}
+                    {activeWine.region && (
+                      <>
+                        {activeWine.vintage && <span>&middot;</span>}
+                        <span>{activeWine.region}</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>

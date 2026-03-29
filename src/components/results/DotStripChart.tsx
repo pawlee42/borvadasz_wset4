@@ -30,14 +30,20 @@ export default function DotStripChart({ data, height = 80 }: DotStripChartProps)
     <div data-chart-id={`dotstrip-${data.label}`}>
       <p className="mb-1 text-xs font-medium text-stone-600">{data.label}</p>
       <ResponsiveContainer width="100%" height={height}>
-        <ScatterChart margin={{ top: 5, right: 10, bottom: 20, left: 10 }}>
+        <ScatterChart margin={{ top: 5, right: data.domain ? 40 : 10, bottom: 20, left: data.domain ? 40 : 10 }}>
           <YAxis type="number" dataKey="y" domain={[0, 1]} hide />
           <XAxis
             type="number"
             dataKey="x"
-            domain={[0, data.labels.length - 1]}
-            ticks={data.labels.map((_, i) => i)}
-            tickFormatter={(i: number) => data.labels[i] ?? ''}
+            domain={data.domain ?? [0, data.labels.length - 1]}
+            ticks={data.domain
+              ? data.labels.map((_, i) => data.domain![0] + (i * (data.domain![1] - data.domain![0])) / (data.labels.length - 1))
+              : data.labels.map((_, i) => i)
+            }
+            tickFormatter={data.domain
+              ? (_: number, i: number) => data.labels[i] ?? ''
+              : (i: number) => data.labels[i] ?? ''
+            }
             tick={{ fontSize: 10, fill: '#78716c' }}
             axisLine={{ stroke: '#d6d3d1' }}
             tickLine={false}

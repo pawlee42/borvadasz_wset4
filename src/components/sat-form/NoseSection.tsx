@@ -4,7 +4,7 @@ import type { SATEvaluation } from '@/lib/types/sat'
 import { NOSE } from '@/lib/constants/sat-options'
 import { OptionSelector } from './OptionSelector'
 import { ScaleSlider } from './ScaleSlider'
-import { HintedTextArea } from './HintedTextArea'
+import { AromaSelector } from './AromaSelector'
 
 interface NoseSectionProps {
   data: SATEvaluation['nose']
@@ -26,9 +26,8 @@ export function NoseSection({ data, onChange }: NoseSectionProps) {
         value={data.intensity}
         onChange={(v) => onChange({ intensity: v })}
       />
-      <HintedTextArea
-        label="Aromajellemzők"
-        placeholder={NOSE.aromaPlaceholder}
+      <AromaSelector
+        label="Illatjegyek"
         value={data.aromaCharacteristics}
         onChange={(v) => onChange({ aromaCharacteristics: v })}
       />

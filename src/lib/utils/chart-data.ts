@@ -8,6 +8,7 @@ export interface DotStripData {
   values: number[]
   median: number
   mean: number
+  domain?: [number, number]
 }
 
 export interface DistributionData {
@@ -122,7 +123,15 @@ export function transformEvaluations(evals: SATEvaluation[]) {
   }
 
   // Conclusions
-  const quality = buildDotStrip('Minőség', CONCLUSIONS.quality as unknown as string[], evals.map((e) => e.conclusions.quality))
+  const qualityValues = evals.map((e) => e.conclusions.quality)
+  const quality: DotStripData = {
+    label: 'Minőség',
+    labels: CONCLUSIONS.qualityRanges.map((r) => r.label),
+    values: qualityValues,
+    median: median(qualityValues),
+    mean: mean(qualityValues),
+    domain: [50, 100],
+  }
   const readinessDist: DistributionData = {
     label: 'Érettség',
     counts: countValues(evals.map((e) => {
@@ -137,7 +146,7 @@ export function transformEvaluations(evals: SATEvaluation[]) {
     { dimension: 'Illatintenzitás', value: median(evals.map((e) => e.nose.intensity)), fullMark: 4 },
     { dimension: 'Savasság', value: median(evals.map((e) => e.palate.acidity)), fullMark: 4 },
     { dimension: 'Test', value: median(evals.map((e) => e.palate.body)), fullMark: 4 },
-    { dimension: 'Alkohol', value: median(evals.map((e) => e.palate.alcohol)) * 2, fullMark: 4 }, // scale 0-2 to 0-4
+    { dimension: 'Alkohol', value: median(evals.map((e) => e.palate.alcohol)), fullMark: 4 },
     { dimension: 'Ízintenzitás', value: median(evals.map((e) => e.palate.flavourIntensity)), fullMark: 4 },
     { dimension: 'Utóíz', value: Math.min(median(finishValues) / 15 * 4, 4), fullMark: 4 },
   ]

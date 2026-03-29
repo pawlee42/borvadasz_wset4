@@ -5,6 +5,7 @@ import type { WineType } from '@/lib/types/sat'
 import { PALATE } from '@/lib/constants/sat-options'
 import { ScaleSlider } from './ScaleSlider'
 import { HintedTextArea } from './HintedTextArea'
+import { AromaSelector } from './AromaSelector'
 import { FinishSlider } from './FinishSlider'
 
 interface PalateSectionProps {
@@ -66,9 +67,8 @@ export function PalateSection({
         value={data.flavourIntensity}
         onChange={(v) => onChange({ flavourIntensity: v })}
       />
-      <HintedTextArea
-        label="Ízjellemzők"
-        placeholder={PALATE.flavourPlaceholder}
+      <AromaSelector
+        label="Ízjegyek"
         value={data.flavourCharacteristics}
         onChange={(v) => onChange({ flavourCharacteristics: v })}
       />

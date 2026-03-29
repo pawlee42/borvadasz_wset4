@@ -14,11 +14,11 @@ export interface SATEvaluation {
     development: 'youthful' | 'developing' | 'fully_developed' | 'tired'
   }
   palate: {
-    sweetness: number // 0-5
+    sweetness: number // 0-4
     acidity: number // 0-4
     tanninLevel: number | null // 0-4, null for white/rosé
     tanninNature: string | null
-    alcohol: number // 0-2
+    alcohol: number // 0-4
     body: number // 0-4
     flavourIntensity: number // 0-4
     flavourCharacteristics: string
@@ -26,7 +26,7 @@ export interface SATEvaluation {
     observations: string
   }
   conclusions: {
-    quality: number // 0-5
+    quality: number // 50-100
     readiness: 'too_young' | 'can_drink_ageing' | 'drink_now' | 'too_old'
     explanation: string
   }
@@ -51,7 +51,7 @@ export function createEmptyEvaluation(wineType: WineType): SATEvaluation {
       acidity: 2,
       tanninLevel: wineType === 'red' ? 2 : null,
       tanninNature: wineType === 'red' ? '' : null,
-      alcohol: 1,
+      alcohol: 2,
       body: 2,
       flavourIntensity: 2,
       flavourCharacteristics: '',
@@ -59,7 +59,7 @@ export function createEmptyEvaluation(wineType: WineType): SATEvaluation {
       observations: '',
     },
     conclusions: {
-      quality: 3,
+      quality: 75,
       readiness: 'drink_now',
       explanation: '',
     },
