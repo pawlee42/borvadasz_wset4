@@ -13,6 +13,7 @@ import RadarProfile from '@/components/results/RadarProfile'
 import FinishChart from '@/components/results/FinishChart'
 import QualitySummary from '@/components/results/QualitySummary'
 import SizedWordList from '@/components/results/SizedWordList'
+import ClimatePanel from '@/components/results/ClimatePanel'
 
 interface WineResultCardProps {
   wine: Wine
@@ -139,6 +140,16 @@ export default function WineResultCard({
           <SizedWordList words={data.conclusions.explanations} />
         </div>
       </div>
+
+      {/* Évjárat időjárása */}
+      {wine.vintage && wine.region && (
+        <div className="grid grid-cols-1 gap-4">
+          <SectionHeader title="Évjárat időjárása" />
+          <div className="col-span-full">
+            <ClimatePanel wine={wine} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
