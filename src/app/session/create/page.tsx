@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 export default function CreateSessionPage() {
   const router = useRouter()
   const [password, setPassword] = useState('')
+  const [authenticated, setAuthenticated] = useState(false)
   const [leaderName, setLeaderName] = useState('')
   const [title, setTitle] = useState('')
   const [eventDate, setEventDate] = useState('')
@@ -20,16 +21,20 @@ export default function CreateSessionPage() {
   const csvRef = useRef<HTMLInputElement>(null)
   const imgRef = useRef<HTMLInputElement>(null)
 
+  function handlePasswordCheck(e: React.FormEvent) {
+    e.preventDefault()
+    if (password !== 'borvadasz42') {
+      setError('Hibás jelszó')
+      return
+    }
+    setError('')
+    setAuthenticated(true)
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError('')
-
-    if (password !== 'borvadasz42') {
-      setError('Hibás jelszó')
-      setLoading(false)
-      return
-    }
 
     try {
       // 1. Create session
@@ -105,19 +110,28 @@ export default function CreateSessionPage() {
           </div>
         </CardHeader>
         <CardContent>
+          {!authenticated ? (
+            <form onSubmit={handlePasswordCheck} className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Admin jelszó</label>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Jelszó"
+                  required
+                />
+              </div>
+              {error && (
+                <p className="text-sm text-red-600">{error}</p>
+              )}
+              <Button type="submit" className="w-full" size="lg">
+                Belépés
+              </Button>
+            </form>
+          ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Admin jelszó</label>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Jelszó"
-                required
-              />
-            </div>
-
-            <div className="border-t border-border pt-4 space-y-4">
+            <div className="space-y-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted">Kóstoló adatai</p>
 
               <div className="space-y-2">
@@ -253,6 +267,7 @@ export default function CreateSessionPage() {
               {loading ? 'Létrehozás...' : 'Kóstoló létrehozása'}
             </Button>
           </form>
+          )}
         </CardContent>
       </Card>
     </main>
