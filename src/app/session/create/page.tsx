@@ -21,14 +21,26 @@ export default function CreateSessionPage() {
   const csvRef = useRef<HTMLInputElement>(null)
   const imgRef = useRef<HTMLInputElement>(null)
 
-  function handlePasswordCheck(e: React.FormEvent) {
+  async function handlePasswordCheck(e: React.FormEvent) {
     e.preventDefault()
-    if (password !== 'borvadasz42') {
-      setError('Hibás jelszó')
-      return
-    }
+    setLoading(true)
     setError('')
-    setAuthenticated(true)
+    try {
+      const res = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      })
+      if (!res.ok) {
+        setError('Hibás jelszó')
+        return
+      }
+      setAuthenticated(true)
+    } catch {
+      setError('Hálózati hiba')
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -42,6 +54,7 @@ export default function CreateSessionPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          password,
           leaderName: leaderName.trim(),
           title: title.trim() || undefined,
           eventDate: eventDate || undefined,

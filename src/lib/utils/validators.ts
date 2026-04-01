@@ -1,6 +1,11 @@
 import { z } from 'zod'
 
+export const verifyPasswordSchema = z.object({
+  password: z.string().min(1),
+})
+
 export const createSessionSchema = z.object({
+  password: z.string().min(1),
   leaderName: z.string().min(1).max(100).trim(),
   title: z.string().max(200).trim().optional(),
   eventDate: z.string().optional(),

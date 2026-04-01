@@ -14,6 +14,14 @@ export async function POST(request: Request) {
       )
     }
 
+    const adminPassword = process.env.ADMIN_PASSWORD
+    if (!adminPassword || parsed.data.password !== adminPassword) {
+      return NextResponse.json(
+        { error: 'Hibás jelszó' },
+        { status: 401 }
+      )
+    }
+
     const supabase = createServiceClient()
     const { leaderName, title, eventDate, location } = parsed.data
 
