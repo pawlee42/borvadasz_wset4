@@ -22,13 +22,13 @@ export default function VerticalBarChart({ data }: VerticalBarChartProps) {
 
   return (
     <div>
-      <p className="mb-2 text-xs font-medium text-stone-600">{data.label}</p>
+      <p className="mb-2 text-xs font-medium text-foreground/70">{data.label}</p>
       <div className="flex items-end justify-between gap-1" style={{ height: 100 }}>
         {segments.map((seg, i) => {
           const heightPct = (seg.count / maxCount) * 100
           return (
             <div key={seg.name} className="flex-1 flex flex-col items-center gap-1">
-              <span className="text-[10px] font-semibold text-stone-600">
+              <span className="text-[10px] font-semibold text-foreground/70">
                 {seg.count > 0 ? seg.count : ''}
               </span>
               <div
@@ -42,7 +42,7 @@ export default function VerticalBarChart({ data }: VerticalBarChartProps) {
           )
         })}
       </div>
-      <div className="mt-1 flex justify-between text-[10px] text-stone-400">
+      <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
         {data.labels.map((label) => (
           <span key={label} className="flex-1 text-center">{label}</span>
         ))}

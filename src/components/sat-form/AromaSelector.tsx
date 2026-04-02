@@ -44,7 +44,7 @@ export function AromaSelector({ label, value, onChange }: AromaSelectorProps) {
               key={item}
               type="button"
               onClick={() => toggle(item)}
-              className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/80"
+              className="rounded-none bg-primary px-3 py-1 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/80"
             >
               {item} ×
             </button>
@@ -54,15 +54,15 @@ export function AromaSelector({ label, value, onChange }: AromaSelectorProps) {
 
       <div className="space-y-1">
         {AROMA_GROUPS.map((group, gi) => (
-          <div key={group.title} className="rounded-lg border border-border overflow-hidden">
+          <div key={group.title} className="rounded-lg bg-surface-low overflow-hidden">
             <button
               type="button"
               onClick={() => setOpenGroup(openGroup === gi ? null : gi)}
               className={cn(
                 'flex w-full items-center justify-between px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide transition-colors',
                 openGroup === gi
-                  ? 'bg-secondary text-secondary-foreground'
-                  : 'bg-background text-muted hover:bg-secondary/50'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-background text-muted-foreground hover:bg-secondary/50'
               )}
             >
               {group.title}
@@ -73,7 +73,7 @@ export function AromaSelector({ label, value, onChange }: AromaSelectorProps) {
               <div className="px-3 py-2 space-y-3 bg-background">
                 {group.categories.map((cat) => (
                   <div key={cat.name}>
-                    <p className="text-[11px] font-medium text-muted mb-1.5">{cat.name}</p>
+                    <p className="text-[11px] font-medium text-muted-foreground mb-1.5">{cat.name}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {cat.items.map((item) => {
                         const isSelected = selected.has(item)
@@ -83,10 +83,10 @@ export function AromaSelector({ label, value, onChange }: AromaSelectorProps) {
                             type="button"
                             onClick={() => toggle(item)}
                             className={cn(
-                              'rounded-full px-3 py-1 text-xs font-medium transition-colors',
+                              'rounded-none px-3 py-1 text-xs font-medium transition-colors',
                               isSelected
                                 ? 'bg-primary text-primary-foreground'
-                                : 'bg-secondary border border-border text-secondary-foreground hover:bg-secondary/80'
+                                : 'bg-surface-high text-foreground/70 hover:bg-surface-high/70'
                             )}
                           >
                             {item}

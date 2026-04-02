@@ -9,7 +9,7 @@ interface SizedWordListProps {
 
 export default function SizedWordList({ words, maxWords = 20 }: SizedWordListProps) {
   if (words.length === 0) {
-    return <p className="text-sm italic text-stone-400">Nincs adat</p>
+    return <p className="text-sm italic text-muted-foreground">Nincs adat</p>
   }
 
   const displayed = words.slice(0, maxWords)
@@ -33,7 +33,7 @@ export default function SizedWordList({ words, maxWords = 20 }: SizedWordListPro
       {displayed.map((w) => (
         <span
           key={w.word}
-          className="inline-block rounded-md bg-stone-100 px-2 py-0.5"
+          className="inline-block rounded-md bg-surface-high px-2 py-0.5"
           style={{
             fontSize: `${fontSize(w.count)}px`,
             color: '#5c3a1e',
@@ -42,7 +42,7 @@ export default function SizedWordList({ words, maxWords = 20 }: SizedWordListPro
         >
           {w.word}
           {w.count > 1 && (
-            <span className="ml-1 text-[10px] text-stone-400">({w.count})</span>
+            <span className="ml-1 text-[10px] text-muted-foreground">({w.count})</span>
           )}
         </span>
       ))}

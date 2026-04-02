@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Newsreader } from 'next/font/google'
 import './globals.css'
 
 const inter = Inter({
@@ -7,12 +7,17 @@ const inter = Inter({
   variable: '--font-sans',
 })
 
+const newsreader = Newsreader({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-serif',
+})
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: '#5c3a1e',
+  themeColor: '#420b15',
 }
 
 export const metadata: Metadata = {
@@ -38,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="hu">
       <body
-        className={`${inter.variable} bg-background text-foreground font-sans antialiased`}
+        className={`${inter.variable} ${newsreader.variable} bg-background text-foreground font-sans antialiased`}
       >
         {children}
       </body>

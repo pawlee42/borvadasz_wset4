@@ -208,11 +208,11 @@ export default function LeaderDashboard() {
         </div>
 
         {loading ? (
-          <div className="text-center py-12 text-muted">
+          <div className="text-center py-12 text-muted-foreground">
             <p>Betöltés...</p>
           </div>
         ) : wines.length === 0 ? (
-          <div className="text-center py-12 text-muted">
+          <div className="text-center py-12 text-muted-foreground">
             <p className="text-lg mb-2">Még nincsenek borok hozzáadva</p>
             <Link href={`/session/${code}/leader/wines`}>
               <Button>Borok hozzáadása</Button>

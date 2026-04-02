@@ -33,6 +33,7 @@ export default function JoinSessionPage() {
 
       const { participant } = await res.json()
       localStorage.setItem(`bv_participant_${code}`, participant.id)
+      localStorage.setItem(`bv_participant_name_${code}`, name.trim())
       router.push(`/session/${code}/tasting`)
     } catch {
       setError('Hálózati hiba, próbáld újra')

@@ -9,6 +9,7 @@ const COLORS = ['#d6ccc2', '#c2a98e', '#a68a6b', '#8b6f4e', '#6b4f2e', '#4a3520'
 interface CategoryPieChartProps {
   data: DotStripData
   height?: number
+  myValue?: number
 }
 
 function bucketValues(data: DotStripData): { name: string; count: number }[] {
@@ -30,13 +31,18 @@ function bucketValues(data: DotStripData): { name: string; count: number }[] {
   return buckets.filter((b) => b.count > 0)
 }
 
-export default function CategoryPieChart({ data, height = 160 }: CategoryPieChartProps) {
+export default function CategoryPieChart({ data, height = 160, myValue }: CategoryPieChartProps) {
   const segments = bucketValues(data)
   const total = data.values.length
 
+  // Resolve own label
+  const myLabel = myValue !== undefined && myValue >= 0 && myValue < data.labels.length
+    ? data.labels[myValue]
+    : undefined
+
   return (
     <div data-chart-id={`pie-${data.label}`}>
-      <p className="mb-1 text-xs font-medium text-stone-600">{data.label}</p>
+      <p className="mb-1 text-xs font-medium text-foreground/70">{data.label}</p>
       <ResponsiveContainer width="100%" height={height}>
         <PieChart>
           <Pie
@@ -54,6 +60,8 @@ export default function CategoryPieChart({ data, height = 160 }: CategoryPieChar
               <Cell
                 key={entry.name}
                 fill={COLORS[i % COLORS.length]}
+                stroke={entry.name === myLabel ? '#dc2626' : undefined}
+                strokeWidth={entry.name === myLabel ? 3 : undefined}
               />
             ))}
           </Pie>
@@ -62,6 +70,9 @@ export default function CategoryPieChart({ data, height = 160 }: CategoryPieChar
           />
         </PieChart>
       </ResponsiveContainer>
+      {myLabel && (
+        <p className="text-center text-[10px] font-medium text-red-600 -mt-2">Saját: {myLabel}</p>
+      )}
     </div>
   )
 }

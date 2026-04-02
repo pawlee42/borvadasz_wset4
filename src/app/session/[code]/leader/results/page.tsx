@@ -8,15 +8,21 @@ import type { SATEvaluation } from '@/lib/types/sat'
 import { useSession } from '@/lib/hooks/useSession'
 import WineResultCard from '@/components/results/WineResultCard'
 
+interface EvalRow {
+  participant_id: string
+  data: SATEvaluation
+}
+
 interface WineWithEvaluations {
   wine: Wine
   evaluations: SATEvaluation[]
+  myEvaluation?: SATEvaluation
 }
 
 export default function ResultsPage() {
   const params = useParams<{ code: string }>()
   const code = params.code
-  const { isLeader } = useSession(code)
+  const { isLeader, participantId } = useSession(code)
   const [wineResults, setWineResults] = useState<WineWithEvaluations[]>([])
   const [sessionInfo, setSessionInfo] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
@@ -30,6 +36,8 @@ export default function ResultsPage() {
           setSessionInfo(await sessionRes.json())
         }
 
+        const pid = participantId ?? localStorage.getItem(`bv_participant_${code}`)
+
         const winesRes = await fetch(`/api/session/${code}/wines`)
         if (!winesRes.ok) return
         const wines: Wine[] = await winesRes.json()
@@ -41,9 +49,10 @@ export default function ResultsPage() {
             `/api/session/${code}/wines/${wine.id}/results`
           )
           if (evalRes.ok) {
-            const rows = await evalRes.json()
-            const evaluations: SATEvaluation[] = rows.map((r: { data: SATEvaluation }) => r.data)
-            results.push({ wine, evaluations })
+            const rows: EvalRow[] = await evalRes.json()
+            const evaluations: SATEvaluation[] = rows.map((r) => r.data)
+            const myRow = pid ? rows.find((r) => r.participant_id === pid) : undefined
+            results.push({ wine, evaluations, myEvaluation: myRow?.data })
           }
         }
         setWineResults(results)
@@ -55,7 +64,7 @@ export default function ResultsPage() {
     }
 
     fetchResults()
-  }, [code])
+  }, [code, participantId])
 
   const handlePrint = useCallback(() => {
     window.print()
@@ -64,7 +73,7 @@ export default function ResultsPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-stone-400">Eredmények betöltése...</p>
+        <p className="text-muted-foreground">Eredmények betöltése...</p>
       </div>
     )
   }
@@ -72,7 +81,7 @@ export default function ResultsPage() {
   if (wineResults.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-stone-500">Még nincsenek közzétett eredmények.</p>
+        <p className="text-muted-foreground">Még nincsenek közzétett eredmények.</p>
       </div>
     )
   }
@@ -83,11 +92,11 @@ export default function ResultsPage() {
         <div className="flex items-center gap-3">
           <Link
             href={isLeader ? `/session/${code}/leader` : `/session/${code}/tasting`}
-            className="text-sm text-stone-500 hover:text-stone-700"
+            className="text-sm text-muted-foreground hover:text-foreground/80"
           >
             &larr; Vissza
           </Link>
-          <h1 className="text-xl font-bold text-stone-800">Kóstolás eredményei</h1>
+          <h1 className="text-xl font-bold text-foreground">Kóstolás eredményei</h1>
         </div>
         {isLeader && (
           <button
@@ -100,13 +109,13 @@ export default function ResultsPage() {
       </div>
 
       {sessionInfo && (sessionInfo.title || sessionInfo.event_date || sessionInfo.location) && (
-        <div className="rounded-lg border border-stone-200 bg-white p-4 sm:p-6 flex items-center gap-4">
+        <div className="rounded-lg border border-border-visible/15 bg-white p-4 sm:p-6 flex items-center gap-4">
           <img src="/logo-circle.png" alt="BT" className="h-16 w-16 rounded-full print:h-12 print:w-12" />
           <div>
             {sessionInfo.title && (
-              <h2 className="text-lg font-bold text-stone-800">{sessionInfo.title}</h2>
+              <h2 className="text-lg font-bold text-foreground">{sessionInfo.title}</h2>
             )}
-            <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-sm text-stone-500 mt-0.5">
+            <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-sm text-muted-foreground mt-0.5">
               {sessionInfo.event_date && (
                 <span>{new Date(sessionInfo.event_date).toLocaleDateString('hu-HU', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
               )}
@@ -123,6 +132,7 @@ export default function ResultsPage() {
           wine={wr.wine}
           evaluations={wr.evaluations}
           participantCount={wr.evaluations.length}
+          myEvaluation={wr.myEvaluation}
         />
       ))}
     </div>

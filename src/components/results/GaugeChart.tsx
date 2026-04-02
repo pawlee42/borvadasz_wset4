@@ -14,7 +14,7 @@ export default function GaugeChart({ data }: GaugeChartProps) {
 
   return (
     <div>
-      <p className="mb-2 text-xs font-medium text-stone-600">{data.label}</p>
+      <p className="mb-2 text-xs font-medium text-foreground/70">{data.label}</p>
       <div className="flex justify-center">
         <div className="relative" style={{ width: 160, height: 90 }}>
           {/* Arc background */}
@@ -64,9 +64,9 @@ export default function GaugeChart({ data }: GaugeChartProps) {
         </div>
       </div>
       <div className="text-center -mt-1">
-        <span className="text-sm font-bold text-stone-700">{meanLabel}</span>
+        <span className="text-sm font-bold text-foreground/80">{meanLabel}</span>
       </div>
-      <div className="flex justify-between mt-1 text-[10px] text-stone-400 px-1">
+      <div className="flex justify-between mt-1 text-[10px] text-muted-foreground px-1">
         <span>{data.labels[0]}</span>
         <span>{data.labels[data.labels.length - 1]}</span>
       </div>

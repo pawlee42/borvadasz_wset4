@@ -13,6 +13,7 @@ export default function TastingPage() {
   const { code } = useParams<{ code: string }>()
   const router = useRouter()
   const [participantId, setParticipantId] = useState<string | null>(null)
+  const [participantName, setParticipantName] = useState<string | null>(null)
   const [wines, setWines] = useState<Wine[]>([])
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -26,6 +27,7 @@ export default function TastingPage() {
       return
     }
     setParticipantId(pid)
+    setParticipantName(localStorage.getItem(`bv_participant_name_${code}`))
 
     fetch(`/api/session/${code}`)
       .then((r) => r.ok ? r.json() : null)
@@ -117,6 +119,7 @@ export default function TastingPage() {
         wineName={activeWine?.name}
         sessionTitle={sessionInfo?.title ?? undefined}
         eventDate={sessionInfo?.event_date ?? undefined}
+        participantName={participantName ?? undefined}
       />
 
       <div className="max-w-3xl mx-auto p-4">
@@ -130,7 +133,7 @@ export default function TastingPage() {
             <h2 className="text-lg font-semibold mb-1">
               Várd a következő bort...
             </h2>
-            <p className="text-sm text-muted">
+            <p className="text-sm text-muted-foreground">
               Az ügyvezető hamarosan aktiválja a következő bort
             </p>
           </div>
@@ -140,7 +143,7 @@ export default function TastingPage() {
             <h2 className="text-lg font-semibold mb-1">
               Értékelés elküldve!
             </h2>
-            <p className="text-sm text-muted">
+            <p className="text-sm text-muted-foreground">
               Várd az eredményeket...
             </p>
             {activeWine.results_revealed && (
@@ -163,16 +166,16 @@ export default function TastingPage() {
                     className="h-24 w-16 rounded object-cover flex-shrink-0"
                   />
                 ) : (
-                  <div className="flex h-24 w-16 items-center justify-center rounded bg-stone-100 text-3xl text-stone-300 flex-shrink-0">
+                  <div className="flex h-24 w-16 items-center justify-center rounded bg-surface-high text-3xl text-muted-foreground flex-shrink-0">
                     <svg viewBox="0 0 24 40" fill="currentColor" className="h-12 w-8">
                       <path d="M9 0h6v2h-6zM10 2h4v6a6 6 0 0 1 4 5.5v20a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 6 33.5v-20A6 6 0 0 1 10 8z" />
                     </svg>
                   </div>
                 )}
                 <div>
-                  <p className="text-xs text-muted">{activeWine.producer}</p>
+                  <p className="text-xs text-muted-foreground">{activeWine.producer}</p>
                   <p className="font-semibold">{activeWine.name}</p>
-                  <div className="flex items-center gap-2 text-xs text-muted mt-0.5">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
                     {activeWine.vintage && <span>{activeWine.vintage}</span>}
                     {activeWine.region && (
                       <>

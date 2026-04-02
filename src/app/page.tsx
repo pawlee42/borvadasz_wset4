@@ -28,8 +28,8 @@ export default function LandingPage() {
             className="mx-auto h-32 w-32 rounded-full"
           />
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold tracking-tight">Borvadász Társaság</h1>
-            <p className="text-muted text-sm">...csak szelektíven</p>
+            <h1 className="font-serif text-4xl font-bold tracking-tight" style={{ letterSpacing: '-0.02em' }}>Borvadász Társaság</h1>
+            <p className="text-muted-foreground text-sm tracking-wide">...csak szelektíven</p>
           </div>
         </div>
 
@@ -59,7 +59,7 @@ export default function LandingPage() {
         <div className="pt-8 text-center">
           <button
             onClick={() => router.push('/session/create')}
-            className="text-xs text-muted hover:text-foreground transition-colors"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             Ügyvezető
           </button>

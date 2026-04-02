@@ -45,7 +45,7 @@ function ClimateScale({ label, value, unit, min, max, minLabel, maxLabel, gradie
 
   return (
     <div>
-      <p className="text-xs font-medium text-stone-600 mb-1">{label}</p>
+      <p className="text-xs font-medium text-foreground/70 mb-1">{label}</p>
       <div className="relative pt-5">
         <div
           className="absolute -translate-x-1/2 bottom-full mb-1 text-[11px] font-bold whitespace-nowrap"
@@ -62,8 +62,8 @@ function ClimateScale({ label, value, unit, min, max, minLabel, maxLabel, gradie
         </div>
       </div>
       <div className="flex justify-between mt-1">
-        <span className="text-[10px] text-stone-400">{minLabel} ({min}{unit})</span>
-        <span className="text-[10px] text-stone-400">{maxLabel} ({max}{unit})</span>
+        <span className="text-[10px] text-muted-foreground">{minLabel} ({min}{unit})</span>
+        <span className="text-[10px] text-muted-foreground">{maxLabel} ({max}{unit})</span>
       </div>
     </div>
   )
@@ -71,12 +71,12 @@ function ClimateScale({ label, value, unit, min, max, minLabel, maxLabel, gradie
 
 function MetricCard({ value, unit, label }: { value: string | number; unit: string; label: string }) {
   return (
-    <div className="rounded-lg bg-stone-50 p-3 text-center">
-      <p className="text-lg font-bold text-stone-800">
+    <div className="rounded-lg bg-surface-low p-3 text-center">
+      <p className="text-lg font-bold text-foreground">
         {value}
-        <span className="text-xs font-normal text-stone-400 ml-0.5">{unit}</span>
+        <span className="text-xs font-normal text-muted-foreground ml-0.5">{unit}</span>
       </p>
-      <p className="text-[10px] text-stone-500 mt-0.5">{label}</p>
+      <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
     </div>
   )
 }
@@ -87,7 +87,7 @@ function TemperatureChart({ data, growingMonths }: { data: MonthlyClimateData[];
 
   return (
     <div>
-      <p className="text-xs font-medium text-stone-600 mb-1">Havi hőmérséklet (°C)</p>
+      <p className="text-xs font-medium text-foreground/70 mb-1">Havi hőmérséklet (°C)</p>
       <ResponsiveContainer width="100%" height={180}>
         <ComposedChart data={data} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
@@ -141,7 +141,7 @@ function PrecipitationChart({ data, growingMonths }: { data: MonthlyClimateData[
 
   return (
     <div>
-      <p className="text-xs font-medium text-stone-600 mb-1">Havi csapadék (mm)</p>
+      <p className="text-xs font-medium text-foreground/70 mb-1">Havi csapadék (mm)</p>
       <ResponsiveContainer width="100%" height={150}>
         <BarChart data={chartData} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
@@ -170,7 +170,7 @@ function SunshineChart({ data, growingMonths }: { data: MonthlyClimateData[]; gr
 
   return (
     <div>
-      <p className="text-xs font-medium text-stone-600 mb-1">Havi napsütés (óra)</p>
+      <p className="text-xs font-medium text-foreground/70 mb-1">Havi napsütés (óra)</p>
       <ResponsiveContainer width="100%" height={150}>
         <BarChart data={chartData} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
@@ -217,7 +217,7 @@ export default function ClimatePanel({ wine }: ClimatePanelProps) {
 
   if (wine.vintage < 1940) {
     return (
-      <p className="text-xs text-stone-400 italic">
+      <p className="text-xs text-muted-foreground italic">
         Időjárási adatok 1940 előtt nem elérhetőek.
       </p>
     )
@@ -229,15 +229,15 @@ export default function ClimatePanel({ wine }: ClimatePanelProps) {
     <div>
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="flex w-full items-center justify-between rounded-lg bg-stone-50 px-4 py-3 text-left transition-colors hover:bg-stone-100"
+        className="flex w-full items-center justify-between rounded-lg bg-surface-low px-4 py-3 text-left transition-colors hover:bg-surface-high"
       >
         <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-stone-700">
+          <span className="text-sm font-medium text-foreground/80">
             {wine.region} — {wine.vintage}
           </span>
           {badge && (
             <span
-              className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
+              className="rounded-none px-2.5 py-0.5 text-[11px] font-semibold"
               style={{ backgroundColor: badge.bg, color: badge.text }}
             >
               {badge.label}
@@ -245,7 +245,7 @@ export default function ClimatePanel({ wine }: ClimatePanelProps) {
           )}
         </div>
         <svg
-          className={`h-4 w-4 text-stone-400 transition-transform ${expanded ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 text-muted-foreground transition-transform ${expanded ? 'rotate-180' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -258,7 +258,7 @@ export default function ClimatePanel({ wine }: ClimatePanelProps) {
       {expanded && (
         <div className="mt-3 space-y-5">
           {loading && (
-            <p className="text-sm text-stone-400 text-center py-8">Időjárási adatok betöltése...</p>
+            <p className="text-sm text-muted-foreground text-center py-8">Időjárási adatok betöltése...</p>
           )}
 
           {error && (
@@ -276,8 +276,8 @@ export default function ClimatePanel({ wine }: ClimatePanelProps) {
               </div>
 
               {/* Global context scales */}
-              <div className="space-y-3 rounded-lg bg-stone-50/50 p-4">
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-stone-500 mb-2">Globális borvidék skála</p>
+              <div className="space-y-3 rounded-lg bg-surface-low/50 p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-2">Globális borvidék skála</p>
                 <ClimateScale
                   label="Hőmérséklet" value={data.growingSeasonAvgTemp} unit="°C"
                   {...GLOBAL_RANGES.temperature}
@@ -308,21 +308,21 @@ export default function ClimatePanel({ wine }: ClimatePanelProps) {
               {/* Risk indicators + harvest */}
               <div className="flex flex-wrap gap-2">
                 {data.frostDays > 0 && (
-                  <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                  <span className="rounded-none bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
                     {data.frostDays} fagynap
                   </span>
                 )}
                 {data.heatSpikeDays > 0 && (
-                  <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-orange-700">
+                  <span className="rounded-none bg-orange-50 px-3 py-1 text-xs font-medium text-orange-700">
                     {data.heatSpikeDays} hőségnap (&gt;35°C)
                   </span>
                 )}
-                <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-medium text-stone-600">
+                <span className="rounded-none bg-surface-high px-3 py-1 text-xs font-medium text-foreground/70">
                   Szüret: {data.harvestAvgTemp}°C átlag, {data.harvestPrecipitation} mm csapadék
                 </span>
               </div>
 
-              <p className="text-[10px] text-stone-400">
+              <p className="text-[10px] text-muted-foreground">
                 Adatok: Open-Meteo.com | {data.location.name} ({data.location.lat.toFixed(2)}°, {data.location.lon.toFixed(2)}°)
               </p>
             </>

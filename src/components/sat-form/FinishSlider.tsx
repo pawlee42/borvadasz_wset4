@@ -9,8 +9,8 @@ interface FinishSliderProps {
 }
 
 const ZONES = [
-  { min: 0, max: 3, label: 'Rövid', color: 'bg-secondary' },
-  { min: 3, max: 5, label: 'Közepes(-)', color: 'bg-secondary/70' },
+  { min: 0, max: 3, label: 'Rövid', color: 'bg-surface-high' },
+  { min: 3, max: 5, label: 'Közepes(-)', color: 'bg-surface-high/70' },
   { min: 5, max: 8, label: 'Közepes', color: 'bg-accent/30' },
   { min: 8, max: 10, label: 'Közepes(+)', color: 'bg-accent/50' },
   { min: 10, max: 15, label: 'Hosszú', color: 'bg-primary/60' },

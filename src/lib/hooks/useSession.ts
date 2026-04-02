@@ -5,12 +5,14 @@ import { useState, useCallback, useEffect } from 'react'
 interface SessionData {
   participantId: string | null
   isLeader: boolean
+  participantName: string | null
 }
 
 export function useSession(code: string) {
   const [session, setSessionState] = useState<SessionData>({
     participantId: null,
     isLeader: false,
+    participantName: null,
   })
 
   useEffect(() => {
@@ -18,15 +20,17 @@ export function useSession(code: string) {
 
     const participantId = localStorage.getItem(`bv_participant_${code}`)
     const isLeader = localStorage.getItem(`bv_leader_${code}`) === 'true'
+    const participantName = localStorage.getItem(`bv_participant_name_${code}`)
 
-    setSessionState({ participantId, isLeader })
+    setSessionState({ participantId, isLeader, participantName })
   }, [code])
 
   const setSession = useCallback(
     (participantId: string, isLeader: boolean) => {
       localStorage.setItem(`bv_participant_${code}`, participantId)
       localStorage.setItem(`bv_leader_${code}`, String(isLeader))
-      setSessionState({ participantId, isLeader })
+      const participantName = localStorage.getItem(`bv_participant_name_${code}`)
+      setSessionState({ participantId, isLeader, participantName })
     },
     [code]
   )

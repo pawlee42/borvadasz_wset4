@@ -14,12 +14,13 @@ const COLORS = ['#8b5e3c', '#a0714d', '#b5845e', '#c99870', '#ddab82']
 
 interface DistributionBarProps {
   data: DistributionData
+  myLabel?: string
 }
 
-export default function DistributionBar({ data }: DistributionBarProps) {
+export default function DistributionBar({ data, myLabel }: DistributionBarProps) {
   return (
     <div data-chart-id={`dist-${data.label}`}>
-      <p className="mb-1 text-xs font-medium text-stone-600">{data.label}</p>
+      <p className="mb-1 text-xs font-medium text-foreground/70">{data.label}</p>
       <ResponsiveContainer width="100%" height={Math.max(data.counts.length * 32, 60)}>
         <BarChart
           data={data.counts}
@@ -40,8 +41,11 @@ export default function DistributionBar({ data }: DistributionBarProps) {
             domain={[0, 'dataMax']}
           />
           <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={18} label={{ position: 'right', fontSize: 11, fill: '#78716c' }}>
-            {data.counts.map((_, i) => (
-              <Cell key={i} fill={COLORS[i % COLORS.length]} />
+            {data.counts.map((entry, i) => (
+              <Cell
+                key={i}
+                fill={myLabel && entry.name === myLabel ? '#dc2626' : COLORS[i % COLORS.length]}
+              />
             ))}
           </Bar>
         </BarChart>

@@ -28,7 +28,7 @@ export default function DotStripChart({ data, height = 80 }: DotStripChartProps)
 
   return (
     <div data-chart-id={`dotstrip-${data.label}`}>
-      <p className="mb-1 text-xs font-medium text-stone-600">{data.label}</p>
+      <p className="mb-1 text-xs font-medium text-foreground/70">{data.label}</p>
       <ResponsiveContainer width="100%" height={height}>
         <ScatterChart margin={{ top: 5, right: data.domain ? 40 : 10, bottom: 20, left: data.domain ? 40 : 10 }}>
           <YAxis type="number" dataKey="y" domain={[0, 1]} hide />

@@ -56,7 +56,7 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-2 pb-20">
       <details open>
-        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm border border-border">
+        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
           {SECTION_LABELS.appearance}
         </summary>
         <div className="p-4 space-y-4">
@@ -69,7 +69,7 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
       </details>
 
       <details>
-        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm border border-border">
+        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
           {SECTION_LABELS.nose}
         </summary>
         <div className="p-4 space-y-4">
@@ -78,7 +78,7 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
       </details>
 
       <details>
-        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm border border-border">
+        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
           {SECTION_LABELS.palate}
         </summary>
         <div className="p-4 space-y-4">
@@ -91,7 +91,7 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
       </details>
 
       <details>
-        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm border border-border">
+        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
           {SECTION_LABELS.conclusions}
         </summary>
         <div className="p-4 space-y-4">
@@ -102,7 +102,7 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
         </div>
       </details>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur border-t border-border">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur border-t border-border-visible/15">
         <div className="max-w-3xl mx-auto">
           <Button
             type="submit"

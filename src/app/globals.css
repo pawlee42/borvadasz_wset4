@@ -1,27 +1,52 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: hsl(30, 20%, 97%);
-  --color-foreground: hsl(25, 30%, 15%);
-  --color-card: hsl(30, 15%, 94%);
-  --color-card-foreground: hsl(25, 30%, 15%);
-  --color-primary: hsl(25, 40%, 35%);
-  --color-primary-foreground: hsl(30, 30%, 96%);
-  --color-secondary: hsl(30, 50%, 85%);
-  --color-secondary-foreground: hsl(25, 40%, 25%);
-  --color-accent: hsl(15, 60%, 45%);
-  --color-accent-foreground: hsl(30, 30%, 96%);
-  --color-muted: hsl(25, 10%, 60%);
-  --color-muted-foreground: hsl(25, 10%, 45%);
-  --color-border: hsl(25, 15%, 85%);
-  --color-ring: hsl(25, 40%, 35%);
+  /* Surface hierarchy - "layered vellum" */
+  --color-background: #fff8f7;
+  --color-foreground: #211a1a;
+  --color-card: #fff0f0;
+  --color-card-foreground: #211a1a;
+
+  /* Burgundy core */
+  --color-primary: #420b15;
+  --color-primary-foreground: #fff8f7;
+  --color-primary-container: #5e2129;
+
+  /* Warm neutrals */
+  --color-secondary: #7a5557;
+  --color-secondary-foreground: #fff8f7;
+  --color-accent: #5e2129;
+  --color-accent-foreground: #fff8f7;
+
+  /* Muted tones */
+  --color-muted: #d8c1c2;
+  --color-muted-foreground: #7a5557;
+
+  /* Surfaces */
+  --color-surface-low: #fff0f0;
+  --color-surface-high: #eedfdf;
+
+  /* Borders - ghost borders only */
+  --color-border: rgba(216, 193, 194, 0.15);
+  --color-border-visible: #d8c1c2;
+  --color-ring: #420b15;
+
+  /* Tertiary - scholarly green accent */
+  --color-tertiary: #003e26;
+  --color-tertiary-foreground: #c4eed5;
+
   --color-destructive: hsl(0, 72%, 51%);
-  --color-destructive-foreground: hsl(0, 0%, 100%);
+  --color-destructive-foreground: #fff;
+
+  /* Typography */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  --font-serif: "Newsreader", "Georgia", serif;
+
+  /* Generous radius for organic feel */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
 }
 
 body {
@@ -39,7 +64,7 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-runnable-track {
   height: 6px;
   border-radius: 3px;
-  background: var(--color-border);
+  background: var(--color-surface-high);
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -57,7 +82,7 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-moz-range-track {
   height: 6px;
   border-radius: 3px;
-  background: var(--color-border);
+  background: var(--color-surface-high);
 }
 
 input[type="range"]::-moz-range-thumb {

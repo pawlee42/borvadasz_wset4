@@ -14,7 +14,7 @@ export function ParticipantList({
 }: ParticipantListProps) {
   return (
     <div className="space-y-1">
-      <h3 className="text-sm font-medium text-muted mb-2">
+      <h3 className="text-sm font-medium text-muted-foreground mb-2">
         Résztvevők ({participants.length})
       </h3>
       <ul className="space-y-1">
@@ -37,7 +37,7 @@ export function ParticipantList({
               <span className="truncate">
                 {p.name}
                 {p.is_leader && (
-                  <span className="ml-1.5 text-xs text-muted">(ügyvezető)</span>
+                  <span className="ml-1.5 text-xs text-muted-foreground">(ügyvezető)</span>
                 )}
               </span>
             </li>

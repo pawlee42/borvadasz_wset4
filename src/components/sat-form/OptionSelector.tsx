@@ -29,10 +29,10 @@ export function OptionSelector({
               type="button"
               onClick={() => onChange(option.value)}
               className={cn(
-                'rounded-full px-4 py-2 text-sm font-medium transition-colors min-h-[44px]',
+                'rounded-none px-4 py-2 text-sm font-medium transition-colors min-h-[44px]',
                 isSelected
                   ? 'bg-primary text-primary-foreground'
-                  : 'bg-secondary border border-border text-secondary-foreground hover:bg-secondary/80'
+                  : 'bg-surface-high text-foreground/70 hover:bg-surface-high/70'
               )}
             >
               {option.label}

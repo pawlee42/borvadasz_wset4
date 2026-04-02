@@ -99,7 +99,7 @@ export default function ManageWinesPage() {
 
         {wines.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-muted">
+            <h3 className="text-sm font-medium text-muted-foreground">
               Hozzáadott borok ({wines.length})
             </h3>
             {wines.map((wine) => (
@@ -107,7 +107,7 @@ export default function ManageWinesPage() {
                 <CardContent className="flex items-center justify-between p-4">
                   <div className="min-w-0">
                     <p className="font-semibold text-sm truncate">{wine.name}</p>
-                    <p className="text-xs text-muted truncate">
+                    <p className="text-xs text-muted-foreground truncate">
                       {wine.producer}
                       {wine.vintage ? ` - ${wine.vintage}` : ''}
                     </p>

@@ -145,7 +145,7 @@ export default function CreateSessionPage() {
           ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted">Kóstoló adatai</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kóstoló adatai</p>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">Borkóstoló címe</label>
@@ -187,12 +187,12 @@ export default function CreateSessionPage() {
               </div>
             </div>
 
-            <div className="border-t border-border pt-4 space-y-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted">Borok feltöltése</p>
+            <div className="pt-6 space-y-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Borok feltöltése</p>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">CSV fájl</label>
-                <p className="text-xs text-muted">
+                <p className="text-xs text-muted-foreground">
                   Oszlopok (pontosvesszővel elválasztva): név; termelő; évjárat; régió; típus (fehér/rosé/vörös)
                 </p>
                 <input
@@ -212,14 +212,14 @@ export default function CreateSessionPage() {
                     {csvFile ? 'Csere' : 'CSV kiválasztása'}
                   </Button>
                   {csvFile && (
-                    <span className="text-xs text-muted truncate">{csvFile.name}</span>
+                    <span className="text-xs text-muted-foreground truncate">{csvFile.name}</span>
                   )}
                 </div>
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">Palack fotók (opcionális)</label>
-                <p className="text-xs text-muted">
+                <p className="text-xs text-muted-foreground">
                   A fájlokat a kóstolási sorrend szerint nevezd el: 1.jpg, 2.jpg, 3.jpg...
                 </p>
                 <input
@@ -240,7 +240,7 @@ export default function CreateSessionPage() {
                     {imageFiles.length > 0 ? 'Csere' : 'Képek kiválasztása'}
                   </Button>
                   {imageFiles.length > 0 && (
-                    <span className="text-xs text-muted">
+                    <span className="text-xs text-muted-foreground">
                       {imageFiles.length} kép kiválasztva
                     </span>
                   )}
@@ -258,9 +258,9 @@ export default function CreateSessionPage() {
                           <img
                             src={URL.createObjectURL(f)}
                             alt={f.name}
-                            className="h-16 w-12 rounded object-cover border border-border"
+                            className="h-16 w-12 rounded object-cover bg-surface-high"
                           />
-                          <p className="text-[10px] text-muted mt-0.5">{f.name}</p>
+                          <p className="text-[10px] text-muted-foreground mt-0.5">{f.name}</p>
                         </div>
                       ))}
                   </div>
