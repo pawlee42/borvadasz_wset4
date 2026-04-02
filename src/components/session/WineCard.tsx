@@ -13,6 +13,7 @@ interface WineCardProps {
   onViewResults?: () => void
   submissionCount?: number
   participantCount?: number
+  submittedNames?: string[]
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -35,6 +36,7 @@ export function WineCard({
   onViewResults,
   submissionCount,
   participantCount,
+  submittedNames,
 }: WineCardProps) {
   return (
     <Card
@@ -103,6 +105,11 @@ export function WineCard({
                 </span>
               )}
             </div>
+          )}
+          {isLeader && submittedNames && submittedNames.length > 0 && (
+            <p className="text-xs text-muted-foreground mt-1.5">
+              {submittedNames.join(', ')}
+            </p>
           )}
         </div>
       </CardContent>

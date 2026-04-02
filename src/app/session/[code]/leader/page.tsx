@@ -19,6 +19,7 @@ export default function LeaderDashboard() {
   const [wines, setWines] = useState<Wine[]>([])
   const [participants, setParticipants] = useState<Participant[]>([])
   const [submissionCounts, setSubmissionCounts] = useState<Record<string, number>>({})
+  const [submittedNames, setSubmittedNames] = useState<Record<string, string[]>>({})
   const [participantId, setParticipantId] = useState<string | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [sessionInfo, setSessionInfo] = useState<Session | null>(null)
@@ -75,15 +76,25 @@ export default function LeaderDashboard() {
     const supabase = createClient()
 
     const counts: Record<string, number> = {}
+    const names: Record<string, string[]> = {}
     for (const wine of wines) {
       const { data } = await supabase
         .from('evaluations')
-        .select('id')
+        .select('participant_id')
         .eq('wine_id', wine.id)
       counts[wine.id] = data?.length ?? 0
+      if (data && data.length > 0) {
+        const evalPids = data.map((e) => e.participant_id)
+        names[wine.id] = participants
+          .filter((p) => !p.is_leader && evalPids.includes(p.id))
+          .map((p) => p.name)
+      } else {
+        names[wine.id] = []
+      }
     }
     setSubmissionCounts(counts)
-  }, [sessionId, wines])
+    setSubmittedNames(names)
+  }, [sessionId, wines, participants])
 
   // Initial data load
   useEffect(() => {
@@ -132,7 +143,7 @@ export default function LeaderDashboard() {
       .on(
         'postgres_changes',
         {
-          event: 'INSERT',
+          event: '*',
           schema: 'public',
           table: 'participants',
           filter: `session_id=eq.${sessionId}`,
@@ -202,6 +213,19 @@ export default function LeaderDashboard() {
     fetchWines()
   }
 
+  async function handleRemoveParticipant(targetId: string) {
+    await fetch(`/api/session/${code}/participants`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-participant-id': participantId!,
+      },
+      body: JSON.stringify({ participantId: targetId }),
+    })
+    fetchParticipants()
+    fetchSubmissionCounts()
+  }
+
   const activeWine = wines.find((w) => w.is_active)
   const nonLeaderCount = participants.filter((p) => !p.is_leader).length
 
@@ -248,6 +272,7 @@ export default function LeaderDashboard() {
                 onViewResults={() => openResultsWindow(wine.id)}
                 submissionCount={submissionCounts[wine.id] ?? 0}
                 participantCount={nonLeaderCount}
+                submittedNames={submittedNames[wine.id]}
               />
             ))}
           </div>
@@ -265,7 +290,11 @@ export default function LeaderDashboard() {
           </div>
         )}
 
-        <ParticipantList participants={participants} />
+        <ParticipantList
+          participants={participants}
+          isLeader
+          onRemove={handleRemoveParticipant}
+        />
       </div>
     </div>
   )

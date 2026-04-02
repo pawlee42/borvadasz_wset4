@@ -5,9 +5,15 @@ import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { SessionHeader } from '@/components/session/SessionHeader'
 import { SATForm } from '@/components/sat-form/SATForm'
+import { EvaluationSummary } from '@/components/tasting/EvaluationSummary'
 import { Card, CardContent } from '@/components/ui/card'
 import type { Wine, Session } from '@/lib/types/database'
 import type { SATEvaluation } from '@/lib/types/sat'
+
+interface EvaluationHistory {
+  wine: Wine
+  evaluation: SATEvaluation
+}
 
 export default function TastingPage() {
   const { code } = useParams<{ code: string }>()
@@ -19,6 +25,7 @@ export default function TastingPage() {
   const [submitting, setSubmitting] = useState(false)
   const [sessionInfo, setSessionInfo] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [evaluationHistory, setEvaluationHistory] = useState<EvaluationHistory[]>([])
 
   useEffect(() => {
     const pid = localStorage.getItem(`bv_participant_${code}`)
@@ -43,10 +50,36 @@ export default function TastingPage() {
     setLoading(false)
   }, [code])
 
+  const fetchMyEvaluations = useCallback(async () => {
+    if (!participantId || wines.length === 0) return
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('evaluations')
+      .select('wine_id, data')
+      .eq('participant_id', participantId)
+    if (data) {
+      const history: EvaluationHistory[] = []
+      for (const row of data) {
+        const wine = wines.find((w) => w.id === row.wine_id)
+        if (wine) {
+          history.push({ wine, evaluation: row.data as SATEvaluation })
+        }
+      }
+      // Sort by wine sort_order descending (newest first)
+      history.sort((a, b) => b.wine.sort_order - a.wine.sort_order)
+      setEvaluationHistory(history)
+    }
+  }, [participantId, wines])
+
   // Initial load
   useEffect(() => {
     if (participantId) fetchWines()
   }, [participantId, fetchWines])
+
+  // Fetch my evaluations when wines are loaded
+  useEffect(() => {
+    fetchMyEvaluations()
+  }, [fetchMyEvaluations])
 
   // Track sessionId separately so realtime sub doesn't re-create on every wines change
   const [sessionId, setSessionId] = useState<string | null>(null)
@@ -87,7 +120,7 @@ export default function TastingPage() {
   const activeWine = wines.find((w) => w.is_active)
 
   async function handleSubmit(data: SATEvaluation) {
-    if (!activeWine || !participantId) return
+    if (!activeWine || !participantId || activeWine.results_revealed) return
     setSubmitting(true)
 
     try {
@@ -103,6 +136,7 @@ export default function TastingPage() {
 
       if (!error) {
         setSubmitted(true)
+        fetchMyEvaluations()
       }
     } finally {
       setSubmitting(false)
@@ -137,6 +171,22 @@ export default function TastingPage() {
               Az ügyvezető hamarosan aktiválja a következő bort
             </p>
           </div>
+        ) : activeWine.results_revealed ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <span className="text-4xl mb-4">&#128270;</span>
+            <h2 className="text-lg font-semibold mb-1">
+              Az eredmények már elérhetők
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Ennél a bornál az értékelés már lezárult.
+            </p>
+            <a
+              href={`/session/${code}/leader/results`}
+              className="mt-4 text-primary underline text-sm"
+            >
+              Eredmények megtekintése
+            </a>
+          </div>
         ) : submitted ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <span className="text-4xl mb-4">&#10003;</span>
@@ -146,14 +196,6 @@ export default function TastingPage() {
             <p className="text-sm text-muted-foreground">
               Várd az eredményeket...
             </p>
-            {activeWine.results_revealed && (
-              <a
-                href={`/session/${code}/leader/results`}
-                className="mt-4 text-primary underline text-sm"
-              >
-                Eredmények megtekintése
-              </a>
-            )}
           </div>
         ) : (
           <>
@@ -195,6 +237,21 @@ export default function TastingPage() {
               disabled={submitting}
             />
           </>
+        )}
+
+        {evaluationHistory.length > 0 && (
+          <div className="mt-8 space-y-3">
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Korábbi értékeléseid ({evaluationHistory.length})
+            </h3>
+            {evaluationHistory.map((item) => (
+              <EvaluationSummary
+                key={item.wine.id}
+                wine={item.wine}
+                evaluation={item.evaluation}
+              />
+            ))}
+          </div>
         )}
       </div>
     </div>
