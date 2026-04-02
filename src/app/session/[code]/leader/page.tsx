@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -10,9 +10,12 @@ import { ParticipantList } from '@/components/session/ParticipantList'
 import { Button } from '@/components/ui/button'
 import type { Wine, Participant, Session } from '@/lib/types/database'
 
+const RESULTS_WINDOW_NAME = 'borvadasz-results'
+
 export default function LeaderDashboard() {
   const { code } = useParams<{ code: string }>()
   const router = useRouter()
+  const resultsWindowRef = useRef<Window | null>(null)
   const [wines, setWines] = useState<Wine[]>([])
   const [participants, setParticipants] = useState<Participant[]>([])
   const [submissionCounts, setSubmissionCounts] = useState<Record<string, number>>({})
@@ -20,6 +23,20 @@ export default function LeaderDashboard() {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [sessionInfo, setSessionInfo] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+
+  function openResultsWindow(wineId?: string) {
+    const hash = wineId ? `#wine-result-${wineId}` : ''
+    const url = `/session/${code}/leader/results${hash}`
+    const existing = resultsWindowRef.current
+
+    if (existing && !existing.closed) {
+      existing.location.replace(url)
+      existing.location.reload()
+      existing.focus()
+    } else {
+      resultsWindowRef.current = window.open(url, RESULTS_WINDOW_NAME)
+    }
+  }
 
   useEffect(() => {
     const pid = localStorage.getItem(`bv_participant_${code}`)
@@ -54,20 +71,18 @@ export default function LeaderDashboard() {
   }, [sessionId])
 
   const fetchSubmissionCounts = useCallback(async () => {
-    if (!sessionId) return
+    if (!sessionId || wines.length === 0) return
     const supabase = createClient()
-    const activeWine = wines.find((w) => w.is_active)
-    if (!activeWine) return
 
-    const { data } = await supabase
-      .from('evaluations')
-      .select('id')
-      .eq('wine_id', activeWine.id)
-
-    setSubmissionCounts((prev) => ({
-      ...prev,
-      [activeWine.id]: data?.length ?? 0,
-    }))
+    const counts: Record<string, number> = {}
+    for (const wine of wines) {
+      const { data } = await supabase
+        .from('evaluations')
+        .select('id')
+        .eq('wine_id', wine.id)
+      counts[wine.id] = data?.length ?? 0
+    }
+    setSubmissionCounts(counts)
   }, [sessionId, wines])
 
   // Initial data load
@@ -173,7 +188,7 @@ export default function LeaderDashboard() {
   }
 
   async function handleReveal(wineId: string) {
-    await fetch(`/api/session/${code}/wines`, {
+    const res = await fetch(`/api/session/${code}/wines`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -181,6 +196,9 @@ export default function LeaderDashboard() {
       },
       body: JSON.stringify({ wineId, action: 'reveal' }),
     })
+    if (res.ok) {
+      openResultsWindow(wineId)
+    }
     fetchWines()
   }
 
@@ -227,6 +245,7 @@ export default function LeaderDashboard() {
                 isLeader
                 onActivate={() => handleActivate(wine.id)}
                 onReveal={() => handleReveal(wine.id)}
+                onViewResults={() => openResultsWindow(wine.id)}
                 submissionCount={submissionCounts[wine.id] ?? 0}
                 participantCount={nonLeaderCount}
               />
@@ -236,11 +255,13 @@ export default function LeaderDashboard() {
 
         {wines.some((w) => w.results_revealed) && (
           <div className="pt-2">
-            <Link href={`/session/${code}/leader/results`}>
-              <Button variant="secondary" className="w-full">
-                Eredmények megtekintése
-              </Button>
-            </Link>
+            <Button
+              variant="secondary"
+              className="w-full"
+              onClick={() => openResultsWindow()}
+            >
+              Összes eredmény megtekintése
+            </Button>
           </div>
         )}
 

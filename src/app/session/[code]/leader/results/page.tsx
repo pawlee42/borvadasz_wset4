@@ -56,6 +56,15 @@ export default function ResultsPage() {
           }
         }
         setWineResults(results)
+
+        // Scroll to specific wine if hash is present
+        setTimeout(() => {
+          const hash = window.location.hash.slice(1)
+          if (hash) {
+            const element = document.getElementById(hash)
+            element?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          }
+        }, 100)
       } catch (err) {
         console.error('Eredmények betöltése sikertelen:', err)
       } finally {

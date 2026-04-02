@@ -10,6 +10,7 @@ interface WineCardProps {
   isLeader?: boolean
   onActivate?: () => void
   onReveal?: () => void
+  onViewResults?: () => void
   submissionCount?: number
   participantCount?: number
 }
@@ -31,6 +32,7 @@ export function WineCard({
   isLeader,
   onActivate,
   onReveal,
+  onViewResults,
   submissionCount,
   participantCount,
 }: WineCardProps) {
@@ -80,14 +82,19 @@ export function WineCard({
           </div>
           {isLeader && (
             <div className="flex items-center gap-2 mt-3 flex-wrap">
-              {!wine.is_active && onActivate && (
+              {!wine.is_active && !wine.results_revealed && onActivate && (
                 <Button size="sm" variant="outline" onClick={onActivate}>
                   Aktiválás
                 </Button>
               )}
-              {onReveal && (
+              {!wine.results_revealed && onReveal && (
                 <Button size="sm" variant="secondary" onClick={onReveal}>
-                  Eredmények
+                  Eredmények felfedése
+                </Button>
+              )}
+              {wine.results_revealed && onViewResults && (
+                <Button size="sm" variant="default" onClick={onViewResults}>
+                  Eredmények megtekintése
                 </Button>
               )}
               {submissionCount != null && participantCount != null && (

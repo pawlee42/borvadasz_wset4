@@ -6,8 +6,11 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
+type Mode = 'login' | 'choose' | 'create' | 'rejoin'
+
 export default function CreateSessionPage() {
   const router = useRouter()
+  const [mode, setMode] = useState<Mode>('login')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
   const [leaderName, setLeaderName] = useState('')
@@ -18,6 +21,7 @@ export default function CreateSessionPage() {
   const [imageFiles, setImageFiles] = useState<File[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [rejoinCode, setRejoinCode] = useState('')
   const csvRef = useRef<HTMLInputElement>(null)
   const imgRef = useRef<HTMLInputElement>(null)
 
@@ -36,6 +40,34 @@ export default function CreateSessionPage() {
         return
       }
       setAuthenticated(true)
+      setMode('choose')
+      setError('')
+    } catch {
+      setError('Hálózati hiba')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleRejoin(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    try {
+      const res = await fetch('/api/session/rejoin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password, code: rejoinCode.trim().toUpperCase() }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setError(data.error ?? 'Hiba történt')
+        return
+      }
+      const { session, participant } = await res.json()
+      localStorage.setItem(`bv_participant_${session.code}`, participant.id)
+      localStorage.setItem(`bv_leader_${session.code}`, 'true')
+      router.push(`/session/${session.code}/leader`)
     } catch {
       setError('Hálózati hiba')
     } finally {
@@ -123,7 +155,7 @@ export default function CreateSessionPage() {
           </div>
         </CardHeader>
         <CardContent>
-          {!authenticated ? (
+          {mode === 'login' ? (
             <form onSubmit={handlePasswordCheck} className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Admin jelszó</label>
@@ -138,12 +170,64 @@ export default function CreateSessionPage() {
               {error && (
                 <p className="text-sm text-red-600">{error}</p>
               )}
-              <Button type="submit" className="w-full" size="lg">
+              <Button type="submit" className="w-full" size="lg" disabled={loading}>
                 Belépés
+              </Button>
+            </form>
+          ) : mode === 'choose' ? (
+            <div className="space-y-3">
+              <Button
+                className="w-full"
+                size="lg"
+                onClick={() => { setMode('create'); setError('') }}
+              >
+                Új kóstoló létrehozása
+              </Button>
+              <Button
+                className="w-full"
+                size="lg"
+                variant="outline"
+                onClick={() => { setMode('rejoin'); setError('') }}
+              >
+                Visszalépés meglévő kóstolóba
+              </Button>
+            </div>
+          ) : mode === 'rejoin' ? (
+            <form onSubmit={handleRejoin} className="space-y-4">
+              <button
+                type="button"
+                onClick={() => { setMode('choose'); setError('') }}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                &larr; Vissza
+              </button>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Kóstoló kódja</label>
+                <Input
+                  value={rejoinCode}
+                  onChange={(e) => setRejoinCode(e.target.value.toUpperCase())}
+                  placeholder="ABC123"
+                  maxLength={6}
+                  className="font-mono text-center text-lg tracking-widest"
+                  required
+                />
+              </div>
+              {error && (
+                <p className="text-sm text-red-600">{error}</p>
+              )}
+              <Button type="submit" className="w-full" size="lg" disabled={loading || rejoinCode.trim().length !== 6}>
+                {loading ? 'Belépés...' : 'Visszalépés a kóstolóba'}
               </Button>
             </form>
           ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
+            <button
+              type="button"
+              onClick={() => { setMode('choose'); setError('') }}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              &larr; Vissza
+            </button>
             <div className="space-y-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kóstoló adatai</p>
 
