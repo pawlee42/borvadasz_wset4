@@ -19,7 +19,7 @@ interface DistributionBarProps {
 
 export default function DistributionBar({ data, myLabel }: DistributionBarProps) {
   return (
-    <div data-chart-id={`dist-${data.label}`}>
+    <div data-chart-id={`dist-${data.label}`} className="w-full overflow-hidden">
       <p className="mb-1 text-xs font-medium text-foreground/70">{data.label}</p>
       <ResponsiveContainer width="100%" height={Math.max(data.counts.length * 32, 60)}>
         <BarChart

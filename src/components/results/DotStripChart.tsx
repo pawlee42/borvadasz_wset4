@@ -27,7 +27,7 @@ export default function DotStripChart({ data, height = 80 }: DotStripChartProps)
   const medianPoint = [{ x: data.median, y: 0.5 }]
 
   return (
-    <div data-chart-id={`dotstrip-${data.label}`}>
+    <div data-chart-id={`dotstrip-${data.label}`} className="w-full overflow-hidden">
       <p className="mb-1 text-xs font-medium text-foreground/70">{data.label}</p>
       <ResponsiveContainer width="100%" height={height}>
         <ScatterChart margin={{ top: 5, right: data.domain ? 40 : 10, bottom: 20, left: data.domain ? 40 : 10 }}>

@@ -64,8 +64,8 @@ export default function WineResultCard({
       className="rounded-lg border border-border-visible/15 bg-white p-4 sm:p-6 print:break-inside-avoid print:shadow-none"
     >
       {/* Wine image + Radar side by side */}
-      <div className="mb-4 grid grid-cols-2 gap-4 items-start">
-        <div className="flex flex-col items-center">
+      <div className="mb-4 grid grid-cols-2 gap-4 items-start overflow-hidden">
+        <div className="flex flex-col items-center min-w-0">
           {wine.image_url ? (
             <img
               src={wine.image_url}
@@ -91,11 +91,13 @@ export default function WineResultCard({
             </p>
           </div>
         </div>
-        <RadarProfile data={data.radar} myData={myRadar} />
+        <div className="min-w-0">
+          <RadarProfile data={data.radar} myData={myRadar} />
+        </div>
       </div>
 
       {/* Szín */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 [&>*]:min-w-0">
         <SectionHeader title="Szín" />
         <CategoryPieChart data={data.appearance.intensity} myValue={myEvaluation?.appearance.intensity} />
         <div className="space-y-2">
@@ -105,7 +107,7 @@ export default function WineResultCard({
       </div>
 
       {/* Illat */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 [&>*]:min-w-0">
         <SectionHeader title="Illat" />
         <CategoryPieChart data={data.nose.intensity} myValue={myEvaluation?.nose.intensity} />
         <div className="space-y-2">
@@ -119,7 +121,7 @@ export default function WineResultCard({
       </div>
 
       {/* Ízvilág */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 [&>*]:min-w-0">
         <SectionHeader title="Ízvilág" />
         <StackedBarChart data={data.palate.sweetness} myValue={myEvaluation?.palate.sweetness} />
         <StackedBarChart data={data.palate.acidity} myValue={myEvaluation?.palate.acidity} />
@@ -145,7 +147,7 @@ export default function WineResultCard({
       </div>
 
       {/* Következtetések */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 [&>*]:min-w-0">
         <SectionHeader title="Következtetések" />
         <QualitySummary data={data.conclusions.quality} myValue={myEvaluation?.conclusions.quality} />
         <DistributionBar data={data.conclusions.readiness} myLabel={myEvaluation ? (CONCLUSIONS.readiness.find(r => r.value === myEvaluation.conclusions.readiness)?.label ?? myEvaluation.conclusions.readiness) : undefined} />

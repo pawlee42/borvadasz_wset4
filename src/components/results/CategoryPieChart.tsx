@@ -41,7 +41,7 @@ export default function CategoryPieChart({ data, height = 160, myValue }: Catego
     : undefined
 
   return (
-    <div data-chart-id={`pie-${data.label}`}>
+    <div data-chart-id={`pie-${data.label}`} className="w-full overflow-hidden">
       <p className="mb-1 text-xs font-medium text-foreground/70">{data.label}</p>
       <ResponsiveContainer width="100%" height={height}>
         <PieChart>

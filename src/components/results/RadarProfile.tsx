@@ -25,7 +25,7 @@ export default function RadarProfile({ data, myData }: RadarProfileProps) {
     : data
 
   return (
-    <div data-chart-id="radar">
+    <div data-chart-id="radar" className="w-full overflow-hidden">
       <ResponsiveContainer width="100%" height={250}>
         <RadarChart data={merged} cx="50%" cy="50%" outerRadius="75%">
           <PolarGrid stroke="#d6d3d1" />

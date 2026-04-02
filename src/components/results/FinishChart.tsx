@@ -28,7 +28,7 @@ export default function FinishChart({ data, myValue }: FinishChartProps) {
   const myIndex = myValue !== undefined ? sorted.findIndex((v) => Math.abs(v - myValue) < 0.01) : -1
 
   return (
-    <div data-chart-id="finish">
+    <div data-chart-id="finish" className="w-full overflow-hidden">
       <p className="mb-1 text-xs font-medium text-foreground/70">Utóíz (másodperc)</p>
 
       <div className="space-y-1">

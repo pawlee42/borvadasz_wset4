@@ -34,7 +34,7 @@ export default function QualitySummary({ data, myValue }: QualitySummaryProps) {
   let myMatchUsed = false
 
   return (
-    <div data-chart-id="quality">
+    <div data-chart-id="quality" className="w-full overflow-hidden">
       <p className="mb-1 text-xs font-medium text-foreground/70">Minőség</p>
 
       <div className="space-y-1">
