@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { createEmptyEvaluation, type WineType, type SATEvaluation } from '@/lib/types/sat'
 import { SECTION_LABELS } from '@/lib/constants/sat-options'
 import { AppearanceSection } from './AppearanceSection'
@@ -19,6 +19,16 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
   const [data, setData] = useState<SATEvaluation>(() =>
     createEmptyEvaluation(wineType)
   )
+
+  const scrollToSummary = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const details = e.currentTarget.closest('details')
+    if (!details) return
+    // Only scroll when the section is being opened (was closed)
+    if (details.open) return
+    requestAnimationFrame(() => {
+      details.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }, [])
 
   function updateAppearance(update: Partial<SATEvaluation['appearance']>) {
     setData((prev) => ({
@@ -54,9 +64,9 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2 pb-20">
+    <form onSubmit={handleSubmit} className="space-y-2">
       <details open>
-        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
+        <summary onClick={scrollToSummary} className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
           {SECTION_LABELS.appearance}
         </summary>
         <div className="p-4 space-y-4">
@@ -69,7 +79,7 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
       </details>
 
       <details>
-        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
+        <summary onClick={scrollToSummary} className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
           {SECTION_LABELS.nose}
         </summary>
         <div className="p-4 space-y-4">
@@ -78,7 +88,7 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
       </details>
 
       <details>
-        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
+        <summary onClick={scrollToSummary} className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
           {SECTION_LABELS.palate}
         </summary>
         <div className="p-4 space-y-4">
@@ -91,7 +101,7 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
       </details>
 
       <details>
-        <summary className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
+        <summary onClick={scrollToSummary} className="cursor-pointer select-none rounded-lg bg-card p-3 font-semibold text-sm bg-surface-high">
           {SECTION_LABELS.conclusions}
         </summary>
         <div className="p-4 space-y-4">
@@ -102,17 +112,15 @@ export function SATForm({ wineType, onSubmit, disabled }: SATFormProps) {
         </div>
       </details>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur border-t border-border-visible/15">
-        <div className="max-w-3xl mx-auto">
-          <Button
-            type="submit"
-            className="w-full"
-            size="lg"
-            disabled={disabled}
-          >
-            Értékelés beküldése
-          </Button>
-        </div>
+      <div className="pt-4 pb-4">
+        <Button
+          type="submit"
+          className="w-full"
+          size="lg"
+          disabled={disabled}
+        >
+          Értékelés beküldése
+        </Button>
       </div>
     </form>
   )

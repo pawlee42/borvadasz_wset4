@@ -71,29 +71,45 @@ export default function LeaderDashboard() {
     if (data) setParticipants(data)
   }, [sessionId])
 
+  const [pendingNames, setPendingNames] = useState<Record<string, string[]>>({})
+
   const fetchSubmissionCounts = useCallback(async () => {
     if (!sessionId || wines.length === 0) return
     const supabase = createClient()
 
     const counts: Record<string, number> = {}
     const names: Record<string, string[]> = {}
+    const pending: Record<string, string[]> = {}
     for (const wine of wines) {
       const { data } = await supabase
         .from('evaluations')
-        .select('participant_id')
+        .select('participant_id, submitted_at')
         .eq('wine_id', wine.id)
+        .order('submitted_at', { ascending: true })
       counts[wine.id] = data?.length ?? 0
       if (data && data.length > 0) {
         const evalPids = data.map((e) => e.participant_id)
-        names[wine.id] = participants
-          .filter((p) => !p.is_leader && evalPids.includes(p.id))
+        // Maintain submission order from the query
+        const orderedNames: string[] = []
+        for (const evalRow of data) {
+          const participant = participants.find((p) => p.id === evalRow.participant_id && !p.is_leader)
+          if (participant) orderedNames.push(participant.name)
+        }
+        names[wine.id] = orderedNames
+        // Pending: non-leader participants who haven't submitted
+        pending[wine.id] = participants
+          .filter((p) => !p.is_leader && !evalPids.includes(p.id))
           .map((p) => p.name)
       } else {
         names[wine.id] = []
+        pending[wine.id] = participants
+          .filter((p) => !p.is_leader)
+          .map((p) => p.name)
       }
     }
     setSubmissionCounts(counts)
     setSubmittedNames(names)
+    setPendingNames(pending)
   }, [sessionId, wines, participants])
 
   // Initial data load
@@ -273,6 +289,7 @@ export default function LeaderDashboard() {
                 submissionCount={submissionCounts[wine.id] ?? 0}
                 participantCount={nonLeaderCount}
                 submittedNames={submittedNames[wine.id]}
+                pendingNames={pendingNames[wine.id]}
               />
             ))}
           </div>

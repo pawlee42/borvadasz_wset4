@@ -68,6 +68,7 @@ export async function POST(
     const producerIdx = header.findIndex((h) => h === 'termelő' || h === 'producer' || h === 'termelo')
     const vintageIdx = header.findIndex((h) => h === 'évjárat' || h === 'vintage' || h === 'evjarat')
     const regionIdx = header.findIndex((h) => h === 'régió' || h === 'region' || h === 'regio')
+    const countryIdx = header.findIndex((h) => h === 'ország' || h === 'country' || h === 'orszag')
     const typeIdx = header.findIndex((h) => h === 'típus' || h === 'type' || h === 'tipus')
 
     if (nameIdx === -1 || producerIdx === -1) {
@@ -111,7 +112,11 @@ export async function POST(
 
       const vintageStr = vintageIdx >= 0 ? cols[vintageIdx] : ''
       const vintage = vintageStr ? parseInt(vintageStr, 10) : null
-      const region = regionIdx >= 0 ? cols[regionIdx] || null : null
+      const regionRaw = regionIdx >= 0 ? cols[regionIdx] || null : null
+      const countryRaw = countryIdx >= 0 ? cols[countryIdx] || null : null
+      const region = regionRaw && countryRaw
+        ? `${regionRaw}, ${countryRaw}`
+        : regionRaw ?? countryRaw
       const typeStr = typeIdx >= 0 ? cols[typeIdx]?.toLowerCase() || '' : ''
       const wine_type = typeMap[typeStr] || 'red'
 

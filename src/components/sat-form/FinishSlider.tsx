@@ -33,15 +33,9 @@ export function FinishSlider({ value, onChange, className }: FinishSliderProps) 
       <label className="text-sm font-medium text-foreground">
         Utóíz (másodperc)
       </label>
-      <input
-        type="range"
-        min={0}
-        max={15}
-        step={0.5}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full min-h-[44px]"
-      />
+      <p className="text-lg text-center font-bold text-primary">
+        {value.toFixed(1)} mp &ndash; {category}
+      </p>
       <div className="flex w-full rounded-md overflow-hidden h-5">
         {ZONES.map((zone) => {
           const widthPercent = ((zone.max - zone.min) / 15) * 100
@@ -59,9 +53,15 @@ export function FinishSlider({ value, onChange, className }: FinishSliderProps) 
           )
         })}
       </div>
-      <p className="text-sm text-center font-medium text-primary">
-        {value.toFixed(1)} mp &ndash; {category}
-      </p>
+      <input
+        type="range"
+        min={0}
+        max={15}
+        step={0.5}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-full min-h-[44px]"
+      />
     </div>
   )
 }

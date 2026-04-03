@@ -165,10 +165,10 @@ export default function TastingPage() {
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <span className="text-5xl mb-4">&#127863;</span>
             <h2 className="text-lg font-semibold mb-1">
-              Várd a következő bort...
+              Az ügyvezető még nem aktiválta a következő bort.
             </h2>
             <p className="text-sm text-muted-foreground">
-              Az ügyvezető hamarosan aktiválja a következő bort
+              Frissítsd az oldalt, ha az ügyvezető már aktiválta.
             </p>
           </div>
         ) : activeWine.results_revealed ? (
@@ -194,8 +194,24 @@ export default function TastingPage() {
               Értékelés elküldve!
             </h2>
             <p className="text-sm text-muted-foreground">
-              Várd az eredményeket...
+              Frissítsd az oldalt a következő bor űrlapjának megjelenítéséhez.
             </p>
+            <button
+              onClick={async () => {
+                if (!activeWine || !participantId) return
+                const res = await fetch(`/api/session/${code}/wines/${activeWine.id}/results`, {
+                  headers: { 'x-participant-id': participantId },
+                })
+                if (res.ok) {
+                  window.open(`/session/${code}/leader/results#wine-result-${activeWine.id}`, '_blank')
+                } else {
+                  alert('Az eredmények az ügyvezető jóváhagyása után érhetők el.')
+                }
+              }}
+              className="mt-4 text-primary underline text-sm"
+            >
+              Eredmények megtekintése
+            </button>
           </div>
         ) : (
           <>

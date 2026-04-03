@@ -151,14 +151,13 @@ export default function CreateSessionPage() {
         <CardHeader>
           <div className="flex items-center gap-3">
             <img src="/logo-circle.png" alt="BT" className="h-10 w-10 rounded-full" />
-            <CardTitle>Kóstoló létrehozása</CardTitle>
+            <CardTitle>{mode === 'create' ? 'Kóstoló létrehozása' : 'Ügyvezetői felület'}</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
           {mode === 'login' ? (
             <form onSubmit={handlePasswordCheck} className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Admin jelszó</label>
                 <Input
                   type="password"
                   value={password}
@@ -181,7 +180,7 @@ export default function CreateSessionPage() {
                 size="lg"
                 onClick={() => { setMode('create'); setError('') }}
               >
-                Új kóstoló létrehozása
+                Új borkóstoló létrehozása
               </Button>
               <Button
                 className="w-full"
@@ -189,7 +188,7 @@ export default function CreateSessionPage() {
                 variant="outline"
                 onClick={() => { setMode('rejoin'); setError('') }}
               >
-                Visszalépés meglévő kóstolóba
+                Csatlakozás meglévő borkóstolóhoz
               </Button>
             </div>
           ) : mode === 'rejoin' ? (
@@ -277,7 +276,7 @@ export default function CreateSessionPage() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">CSV fájl</label>
                 <p className="text-xs text-muted-foreground">
-                  Oszlopok (pontosvesszővel elválasztva): név; termelő; évjárat; régió; típus (fehér/rosé/vörös)
+                  Oszlopok (pontosvesszővel elválasztva): név; termelő; évjárat; régió; ország; típus (fehér/rosé/vörös)
                 </p>
                 <input
                   ref={csvRef}

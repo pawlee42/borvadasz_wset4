@@ -13,10 +13,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
-const SESSION_CODE = 'ZENY53'
+const SESSION_CODE = 'CMDGBB'
 
 const PARTICIPANTS = [
-  'Kovács Anna',
   'Nagy Péter',
   'Szabó Eszter',
   'Tóth Balázs',
@@ -28,6 +27,8 @@ const PARTICIPANTS = [
   'Balogh Zsófia',
   'Papp Tamás',
   'Lakatos Nóra',
+  'Szilágyi Bence',
+  'Farkas Virág',
 ]
 
 const COLOURS_WHITE = ['lemon-green', 'lemon', 'gold', 'amber']

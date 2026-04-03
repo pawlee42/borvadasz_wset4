@@ -14,6 +14,7 @@ interface WineCardProps {
   submissionCount?: number
   participantCount?: number
   submittedNames?: string[]
+  pendingNames?: string[]
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -37,6 +38,7 @@ export function WineCard({
   submissionCount,
   participantCount,
   submittedNames,
+  pendingNames,
 }: WineCardProps) {
   return (
     <Card
@@ -99,19 +101,26 @@ export function WineCard({
                   Eredmények megtekintése
                 </Button>
               )}
-              {submissionCount != null && participantCount != null && (
-                <span className="text-xs text-muted-foreground ml-auto">
-                  {submissionCount}/{participantCount} beérkezett
-                </span>
-              )}
             </div>
           )}
-          {isLeader && submittedNames && submittedNames.length > 0 && (
-            <p className="text-xs text-muted-foreground mt-1.5">
-              {submittedNames.join(', ')}
-            </p>
-          )}
         </div>
+        {isLeader && wine.is_active && submissionCount != null && participantCount != null && (
+          <div className="flex-shrink-0 w-56 border-l border-border-visible/15 pl-4 space-y-1">
+            <p className="text-xs font-medium text-foreground">
+              Beküldött értékelések: {submissionCount}/{participantCount}
+            </p>
+            {submittedNames && submittedNames.length > 0 && (
+              <p className="text-xs text-muted-foreground">
+                {submittedNames.join(', ')}
+              </p>
+            )}
+            {pendingNames && pendingNames.length > 0 && (
+              <p className="text-xs text-muted-foreground/40">
+                {pendingNames.join(', ')}
+              </p>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   )
