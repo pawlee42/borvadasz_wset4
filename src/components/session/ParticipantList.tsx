@@ -8,7 +8,7 @@ interface ParticipantListProps {
   participants: Participant[]
   evaluationCounts?: Map<string, number>
   isLeader?: boolean
-  onRemove?: (participantId: string) => void
+  onRemove?: (participantId: string, keepEvaluations: boolean) => void
 }
 
 export function ParticipantList({
@@ -41,20 +41,29 @@ export function ParticipantList({
               >
                 {hasSubmitted ? '✓' : '○'}
               </span>
-              <span className="truncate flex-1">
+              <span className={cn('truncate flex-1', p.is_removed && 'text-muted-foreground line-through')}>
                 {p.name}
                 {p.is_leader && (
                   <span className="ml-1.5 text-xs text-muted-foreground">(ügyvezető)</span>
                 )}
+                {p.is_removed && (
+                  <span className="ml-1.5 text-xs text-muted-foreground no-underline">(eltávozott)</span>
+                )}
               </span>
-              {isLeader && !p.is_leader && onRemove && (
+              {isLeader && !p.is_leader && !p.is_removed && onRemove && (
                 confirmId === p.id ? (
-                  <div className="flex items-center gap-1 flex-shrink-0">
+                  <div className="flex flex-col gap-1 flex-shrink-0">
                     <button
-                      onClick={() => { onRemove(p.id); setConfirmId(null) }}
+                      onClick={() => { onRemove(p.id, true); setConfirmId(null) }}
+                      className="text-xs text-foreground/70 hover:text-foreground font-medium px-1.5 py-0.5 rounded bg-surface-high"
+                    >
+                      Eltávozott
+                    </button>
+                    <button
+                      onClick={() => { onRemove(p.id, false); setConfirmId(null) }}
                       className="text-xs text-red-600 hover:text-red-700 font-medium px-1.5 py-0.5 rounded bg-red-50"
                     >
-                      Törlés
+                      Törlés értékelésekkel
                     </button>
                     <button
                       onClick={() => setConfirmId(null)}

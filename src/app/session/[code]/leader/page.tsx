@@ -106,14 +106,14 @@ export default function LeaderDashboard() {
           if (participant) orderedNames.push(participant.name)
         }
         names[wine.id] = orderedNames
-        // Pending: non-leader participants who haven't submitted
+        // Pending: non-leader, non-removed participants who haven't submitted
         pending[wine.id] = participants
-          .filter((p) => !p.is_leader && !evalPids.includes(p.id))
+          .filter((p) => !p.is_leader && !p.is_removed && !evalPids.includes(p.id))
           .map((p) => p.name)
       } else {
         names[wine.id] = []
         pending[wine.id] = participants
-          .filter((p) => !p.is_leader)
+          .filter((p) => !p.is_leader && !p.is_removed)
           .map((p) => p.name)
       }
     }
@@ -239,14 +239,14 @@ export default function LeaderDashboard() {
     fetchWines()
   }
 
-  async function handleRemoveParticipant(targetId: string) {
+  async function handleRemoveParticipant(targetId: string, keepEvaluations: boolean) {
     await fetch(`/api/session/${code}/participants`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         'x-participant-id': participantId!,
       },
-      body: JSON.stringify({ participantId: targetId }),
+      body: JSON.stringify({ participantId: targetId, keepEvaluations }),
     })
     fetchParticipants()
     fetchSubmissionCounts()
@@ -255,7 +255,7 @@ export default function LeaderDashboard() {
   const autoRevealedRef = useRef<Set<string>>(new Set())
 
   const activeWine = wines.find((w) => w.is_active)
-  const nonLeaderCount = participants.filter((p) => !p.is_leader).length
+  const nonLeaderCount = participants.filter((p) => !p.is_leader && !p.is_removed).length
 
   // Auto-reveal when all participants have submitted
   useEffect(() => {

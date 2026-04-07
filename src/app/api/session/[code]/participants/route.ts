@@ -25,7 +25,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Csak az ügyvezető törölhet résztvevőt' }, { status: 403 })
     }
 
-    const { participantId } = await request.json()
+    const { participantId, keepEvaluations } = await request.json()
     if (!participantId) {
       return NextResponse.json({ error: 'Hiányzó résztvevő azonosító' }, { status: 400 })
     }
@@ -55,9 +55,17 @@ export async function DELETE(
       return NextResponse.json({ error: 'A résztvevő nem ehhez a kóstolóhoz tartozik' }, { status: 400 })
     }
 
-    // Delete evaluations first, then participant
-    await supabase.from('evaluations').delete().eq('participant_id', participantId)
-    await supabase.from('participants').delete().eq('id', participantId)
+    if (keepEvaluations) {
+      // Soft delete: mark as removed, keep evaluations in results
+      await supabase
+        .from('participants')
+        .update({ is_removed: true })
+        .eq('id', participantId)
+    } else {
+      // Hard delete: remove evaluations and participant
+      await supabase.from('evaluations').delete().eq('participant_id', participantId)
+      await supabase.from('participants').delete().eq('id', participantId)
+    }
 
     return NextResponse.json({ ok: true })
   } catch {

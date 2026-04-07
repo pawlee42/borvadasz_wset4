@@ -31,6 +31,7 @@ export interface Participant {
   session_id: string
   name: string
   is_leader: boolean
+  is_removed: boolean
   joined_at: string
 }
 
