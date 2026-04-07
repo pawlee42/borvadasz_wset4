@@ -19,6 +19,7 @@ export const rejoinSessionSchema = z.object({
 
 export const joinSessionSchema = z.object({
   name: z.string().min(1).max(100).trim(),
+  confirm: z.boolean().optional(),
 })
 
 export const createWineSchema = z.object({

@@ -18,6 +18,48 @@ function isRateLimited(ip: string): boolean {
   return recent.length > maxRequests
 }
 
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ code: string }> }
+) {
+  try {
+    const { code } = await params
+    const url = new URL(request.url)
+    const participantId = url.searchParams.get('participantId')
+
+    if (!participantId) {
+      return NextResponse.json({ error: 'Missing participantId' }, { status: 400 })
+    }
+
+    const supabase = createServiceClient()
+
+    const { data: session } = await supabase
+      .from('sessions')
+      .select('id')
+      .eq('code', code.toUpperCase())
+      .single()
+
+    if (!session) {
+      return NextResponse.json({ error: 'Session not found' }, { status: 404 })
+    }
+
+    const { data: participant } = await supabase
+      .from('participants')
+      .select('id')
+      .eq('id', participantId)
+      .eq('session_id', session.id)
+      .single()
+
+    if (!participant) {
+      return NextResponse.json({ error: 'Participant not found' }, { status: 404 })
+    }
+
+    return NextResponse.json({ valid: true })
+  } catch {
+    return NextResponse.json({ error: 'Szerverhiba' }, { status: 500 })
+  }
+}
+
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ code: string }> }
@@ -70,14 +112,17 @@ export async function POST(
     // Check if name is taken
     const { data: existing } = await supabase
       .from('participants')
-      .select('id')
+      .select('*')
       .eq('session_id', session.id)
       .eq('name', parsed.data.name)
       .single()
 
     if (existing) {
+      if (parsed.data.confirm) {
+        return NextResponse.json({ session, participant: existing }, { status: 200 })
+      }
       return NextResponse.json(
-        { error: 'Ez a név már foglalt ebben a kóstolóban' },
+        { error: 'Ez a név már foglalt ebben a kóstolóban', nameConflict: true },
         { status: 409 }
       )
     }

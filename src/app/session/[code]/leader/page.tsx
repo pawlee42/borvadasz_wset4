@@ -8,6 +8,7 @@ import { SessionHeader } from '@/components/session/SessionHeader'
 import { WineCard } from '@/components/session/WineCard'
 import { ParticipantList } from '@/components/session/ParticipantList'
 import { Button } from '@/components/ui/button'
+import { QRCheckin } from '@/components/session/QRCheckin'
 import type { Wine, Participant, Session } from '@/lib/types/database'
 
 const RESULTS_WINDOW_NAME = 'borvadasz-results'
@@ -25,11 +26,20 @@ export default function LeaderDashboard() {
   const [sessionInfo, setSessionInfo] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
 
-  function openResultsWindow(wineId?: string) {
+  function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+  }
+
+  function navigateToResults(wineId?: string) {
     const hash = wineId ? `#wine-result-${wineId}` : ''
     const url = `/session/${code}/leader/results${hash}`
-    const existing = resultsWindowRef.current
 
+    if (isMobileDevice()) {
+      router.push(url)
+      return
+    }
+
+    const existing = resultsWindowRef.current
     if (existing && !existing.closed) {
       existing.location.replace(url)
       existing.location.reload()
@@ -224,7 +234,7 @@ export default function LeaderDashboard() {
       body: JSON.stringify({ wineId, action: 'reveal' }),
     })
     if (res.ok) {
-      openResultsWindow(wineId)
+      navigateToResults(wineId)
     }
     fetchWines()
   }
@@ -265,6 +275,8 @@ export default function LeaderDashboard() {
           </Link>
         </div>
 
+        <QRCheckin code={code} />
+
         {loading ? (
           <div className="text-center py-12 text-muted-foreground">
             <p>Betöltés...</p>
@@ -285,7 +297,7 @@ export default function LeaderDashboard() {
                 isLeader
                 onActivate={() => handleActivate(wine.id)}
                 onReveal={() => handleReveal(wine.id)}
-                onViewResults={() => openResultsWindow(wine.id)}
+                onViewResults={() => navigateToResults(wine.id)}
                 submissionCount={submissionCounts[wine.id] ?? 0}
                 participantCount={nonLeaderCount}
                 submittedNames={submittedNames[wine.id]}
@@ -300,7 +312,7 @@ export default function LeaderDashboard() {
             <Button
               variant="secondary"
               className="w-full"
-              onClick={() => openResultsWindow()}
+              onClick={() => navigateToResults()}
             >
               Összes eredmény megtekintése
             </Button>
