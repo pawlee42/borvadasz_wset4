@@ -47,13 +47,13 @@ export default function QualitySummary({ data, myValue }: QualitySummaryProps) {
               <div className="flex-1 relative h-[2px] bg-surface-high rounded">
                 <div
                   className="absolute left-0 top-0 h-full rounded"
-                  style={{ width: `${pct}%`, backgroundColor: isMine ? '#dc2626' : getQualityColor(v) }}
+                  style={{ width: `${pct}%`, backgroundColor: getQualityColor(v) }}
                 />
                 <div
                   className="absolute top-1/2 w-2.5 h-2.5 rounded-full border-2 border-white"
                   style={{
                     left: `${pct}%`,
-                    backgroundColor: isMine ? '#dc2626' : getQualityColor(v),
+                    backgroundColor: getQualityColor(v),
                     transform: 'translate(-50%, -50%)',
                   }}
                 />

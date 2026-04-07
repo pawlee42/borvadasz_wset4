@@ -44,7 +44,6 @@ export default function StackedBarChart({ data, myValue }: StackedBarChartProps)
                   width: `${(seg.count / total) * 100}%`,
                   backgroundColor: COLORS[i % COLORS.length],
                   color: i >= 3 ? '#fff' : '#5c4a3a',
-                  border: myValue === i ? '2px solid #dc2626' : 'none',
                 }}
                 title={`${seg.name}: ${seg.count}`}
               >

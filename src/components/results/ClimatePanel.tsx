@@ -195,11 +195,10 @@ export default function ClimatePanel({ wine }: ClimatePanelProps) {
   const [data, setData] = useState<ClimateProfile | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [expanded, setExpanded] = useState(false)
   const fetched = useRef(false)
 
   useEffect(() => {
-    if (!expanded || fetched.current || !wine.vintage || !wine.region) return
+    if (fetched.current || !wine.vintage || !wine.region) return
     fetched.current = true
     setLoading(true)
 
@@ -211,7 +210,7 @@ export default function ClimatePanel({ wine }: ClimatePanelProps) {
       .then((profile: ClimateProfile) => setData(profile))
       .catch((err) => setError(typeof err === 'string' ? err : 'Időjárási adatok nem elérhetőek'))
       .finally(() => setLoading(false))
-  }, [expanded, wine.vintage, wine.region])
+  }, [wine.vintage, wine.region])
 
   if (!wine.vintage || !wine.region) return null
 
@@ -227,36 +226,21 @@ export default function ClimatePanel({ wine }: ClimatePanelProps) {
 
   return (
     <div>
-      <button
-        onClick={() => setExpanded((v) => !v)}
-        className="flex w-full items-center justify-between rounded-lg bg-surface-low px-4 py-3 text-left transition-colors hover:bg-surface-high"
-      >
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-foreground/80">
-            {wine.region} — {wine.vintage}
+      <div className="flex items-center gap-3 rounded-lg bg-surface-low px-4 py-3">
+        <span className="text-sm font-medium text-foreground/80">
+          {wine.region} — {wine.vintage}
+        </span>
+        {badge && (
+          <span
+            className="rounded-none px-2.5 py-0.5 text-[11px] font-semibold"
+            style={{ backgroundColor: badge.bg, color: badge.text }}
+          >
+            {badge.label}
           </span>
-          {badge && (
-            <span
-              className="rounded-none px-2.5 py-0.5 text-[11px] font-semibold"
-              style={{ backgroundColor: badge.bg, color: badge.text }}
-            >
-              {badge.label}
-            </span>
-          )}
-        </div>
-        <svg
-          className={`h-4 w-4 text-muted-foreground transition-transform ${expanded ? 'rotate-180' : ''}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
+        )}
+      </div>
 
-      {expanded && (
-        <div className="mt-3 space-y-5">
+      <div className="mt-3 space-y-5">
           {loading && (
             <p className="text-sm text-muted-foreground text-center py-8">Időjárási adatok betöltése...</p>
           )}
@@ -328,7 +312,6 @@ export default function ClimatePanel({ wine }: ClimatePanelProps) {
             </>
           )}
         </div>
-      )}
     </div>
   )
 }

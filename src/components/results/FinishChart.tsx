@@ -40,11 +40,11 @@ export default function FinishChart({ data, myValue }: FinishChartProps) {
               <div className="flex-1 relative h-[2px] bg-surface-high rounded">
                 <div
                   className="absolute left-0 top-0 h-full rounded"
-                  style={{ width: `${pct}%`, backgroundColor: isMine ? '#dc2626' : getZoneColor(v) }}
+                  style={{ width: `${pct}%`, backgroundColor: getZoneColor(v) }}
                 />
                 <div
                   className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border-2 border-white"
-                  style={{ left: `${pct}%`, backgroundColor: isMine ? '#dc2626' : getZoneColor(v), transform: 'translate(-50%, -50%)' }}
+                  style={{ left: `${pct}%`, backgroundColor: getZoneColor(v), transform: 'translate(-50%, -50%)' }}
                 />
               </div>
               <span className={`text-[11px] w-8 text-right tabular-nums ${isMine ? 'text-red-600 font-bold' : 'text-foreground/70'}`}>

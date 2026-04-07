@@ -23,6 +23,17 @@ interface WineResultCardProps {
   myEvaluation?: SATEvaluation
 }
 
+/** Tokenize text the same way as computeWordFrequency to match displayed words */
+function extractWords(text: string | undefined): Set<string> {
+  if (!text?.trim()) return new Set()
+  return new Set(
+    text.toLowerCase()
+      .split(/[,;.\n]+/)
+      .map((w) => w.trim())
+      .filter((w) => w.length > 1)
+  )
+}
+
 function SectionHeader({ title }: { title: string }) {
   return (
     <h3 className="col-span-full mb-2 mt-4 border-b border-border-visible/15 pb-1 text-sm font-semibold uppercase tracking-wide text-foreground/80">
@@ -116,7 +127,7 @@ export default function WineResultCard({
         </div>
         <div className="col-span-full">
           <p className="mb-1 text-xs font-medium text-foreground/70">Illatjegyek</p>
-          <SizedWordList words={data.nose.aromas} />
+          <SizedWordList words={data.nose.aromas} myWords={extractWords(myEvaluation?.nose.aromaCharacteristics)} />
         </div>
       </div>
 
@@ -137,12 +148,12 @@ export default function WineResultCard({
         {data.palate.tanninLevel && data.palate.tanninNatureWords.length > 0 && (
           <div className="col-span-full">
             <p className="mb-1 text-xs font-medium text-foreground/70">Tannin jellege</p>
-            <SizedWordList words={data.palate.tanninNatureWords} />
+            <SizedWordList words={data.palate.tanninNatureWords} myWords={extractWords(myEvaluation?.palate.tanninNature)} />
           </div>
         )}
         <div className="col-span-full">
           <p className="mb-1 text-xs font-medium text-foreground/70">Ízjegyek</p>
-          <SizedWordList words={data.palate.flavourWords} />
+          <SizedWordList words={data.palate.flavourWords} myWords={extractWords(myEvaluation?.palate.flavourCharacteristics)} />
         </div>
       </div>
 
@@ -153,7 +164,7 @@ export default function WineResultCard({
         <DistributionBar data={data.conclusions.readiness} myLabel={myEvaluation ? (CONCLUSIONS.readiness.find(r => r.value === myEvaluation.conclusions.readiness)?.label ?? myEvaluation.conclusions.readiness) : undefined} />
         <div className="col-span-full">
           <p className="mb-1 text-xs font-medium text-foreground/70">Indoklás</p>
-          <SizedWordList words={data.conclusions.explanations} />
+          <SizedWordList words={data.conclusions.explanations} myWords={extractWords(myEvaluation?.conclusions.explanation)} />
         </div>
       </div>
 

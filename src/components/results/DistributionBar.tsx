@@ -30,7 +30,19 @@ export default function DistributionBar({ data, myLabel }: DistributionBarProps)
           <YAxis
             type="category"
             dataKey="name"
-            tick={{ fontSize: 11, fill: '#57534e' }}
+            tick={({ x, y, payload }: { x: number; y: number; payload: { value: string } }) => (
+              <text
+                x={x}
+                y={y}
+                dy={4}
+                textAnchor="end"
+                fontSize={11}
+                fill={myLabel && payload.value === myLabel ? '#dc2626' : '#57534e'}
+                fontWeight={myLabel && payload.value === myLabel ? 700 : 400}
+              >
+                {payload.value}
+              </text>
+            )}
             axisLine={false}
             tickLine={false}
             width={75}
@@ -41,10 +53,10 @@ export default function DistributionBar({ data, myLabel }: DistributionBarProps)
             domain={[0, 'dataMax']}
           />
           <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={18} label={{ position: 'right', fontSize: 11, fill: '#78716c' }}>
-            {data.counts.map((entry, i) => (
+            {data.counts.map((_, i) => (
               <Cell
                 key={i}
-                fill={myLabel && entry.name === myLabel ? '#dc2626' : COLORS[i % COLORS.length]}
+                fill={COLORS[i % COLORS.length]}
               />
             ))}
           </Bar>

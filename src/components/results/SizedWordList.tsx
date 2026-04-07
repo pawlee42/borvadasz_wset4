@@ -5,9 +5,10 @@ import type { WordFrequency } from '@/lib/utils/word-frequency'
 interface SizedWordListProps {
   words: WordFrequency[]
   maxWords?: number
+  myWords?: Set<string>
 }
 
-export default function SizedWordList({ words, maxWords = 20 }: SizedWordListProps) {
+export default function SizedWordList({ words, maxWords = 20, myWords }: SizedWordListProps) {
   if (words.length === 0) {
     return <p className="text-sm italic text-muted-foreground">Nincs adat</p>
   }
@@ -30,14 +31,17 @@ export default function SizedWordList({ words, maxWords = 20 }: SizedWordListPro
 
   return (
     <div className="flex flex-wrap gap-2" data-chart-id="words">
-      {displayed.map((w) => (
+      {displayed.map((w) => {
+        const isMine = myWords?.has(w.word)
+        return (
         <span
           key={w.word}
           className="inline-block rounded-md bg-surface-high px-2 py-0.5"
           style={{
             fontSize: `${fontSize(w.count)}px`,
-            color: '#5c3a1e',
-            opacity: opacity(w.count),
+            color: isMine ? '#dc2626' : '#5c3a1e',
+            fontWeight: isMine ? 700 : undefined,
+            opacity: isMine ? 1 : opacity(w.count),
           }}
         >
           {w.word}
@@ -45,7 +49,8 @@ export default function SizedWordList({ words, maxWords = 20 }: SizedWordListPro
             <span className="ml-1 text-[10px] text-muted-foreground">({w.count})</span>
           )}
         </span>
-      ))}
+        )
+      })}
     </div>
   )
 }

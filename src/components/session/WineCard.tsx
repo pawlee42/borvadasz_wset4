@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { cn } from '@/lib/utils/cn'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -40,6 +41,19 @@ export function WineCard({
   submittedNames,
   pendingNames,
 }: WineCardProps) {
+  const [showRevealConfirm, setShowRevealConfirm] = useState(false)
+
+  const isAllSubmitted = submissionCount != null && participantCount != null
+    && participantCount > 0 && submissionCount >= participantCount
+
+  function handleRevealClick() {
+    if (isAllSubmitted) {
+      onReveal?.()
+    } else {
+      setShowRevealConfirm(true)
+    }
+  }
+
   return (
     <Card
       className={cn(
@@ -92,8 +106,8 @@ export function WineCard({
                     Aktiválás
                   </Button>
                 )}
-                {!wine.results_revealed && onReveal && (
-                  <Button size="sm" variant="secondary" onClick={onReveal}>
+                {!wine.results_revealed && onReveal && !showRevealConfirm && (
+                  <Button size="sm" variant="secondary" onClick={handleRevealClick}>
                     Eredmények felfedése
                   </Button>
                 )}
@@ -106,6 +120,33 @@ export function WineCard({
             )}
           </div>
         </div>
+        {showRevealConfirm && !wine.results_revealed && (
+          <div className="rounded-xl bg-surface-low p-3 space-y-2">
+            <p className="text-xs text-foreground">
+              {participantCount != null && submissionCount != null
+                ? `${participantCount - submissionCount} résztvevő még nem adta be az értékelését.`
+                : 'Nem minden értékelés érkezett be.'
+              }
+              {' '}Biztosan felfeded az eredményeket?
+            </p>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowRevealConfirm(false)}
+              >
+                Mégsem
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => { setShowRevealConfirm(false); onReveal?.() }}
+              >
+                Felfedés
+              </Button>
+            </div>
+          </div>
+        )}
         {isLeader && wine.is_active && submissionCount != null && participantCount != null && (
           <div className="border-t border-border-visible/15 pt-3 space-y-1">
             <p className="text-xs font-medium text-foreground">

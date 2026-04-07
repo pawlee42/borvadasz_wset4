@@ -54,14 +54,23 @@ export default function CategoryPieChart({ data, height = 160, myValue }: Catego
             outerRadius={55}
             innerRadius={25}
             paddingAngle={2}
-            label={({ name, count }) => `${name} (${count})`}
+            label={({ name, count, x, y, textAnchor }: { name: string; count: number; x: number; y: number; textAnchor: string }) => (
+              <text
+                x={x}
+                y={y}
+                textAnchor={textAnchor}
+                fontSize={11}
+                fill={name === myLabel ? '#dc2626' : '#57534e'}
+                fontWeight={name === myLabel ? 700 : 400}
+              >
+                {`${name} (${count})`}
+              </text>
+            )}
           >
             {segments.map((entry, i) => (
               <Cell
                 key={entry.name}
                 fill={COLORS[i % COLORS.length]}
-                stroke={entry.name === myLabel ? '#dc2626' : undefined}
-                strokeWidth={entry.name === myLabel ? 3 : undefined}
               />
             ))}
           </Pie>
@@ -70,9 +79,6 @@ export default function CategoryPieChart({ data, height = 160, myValue }: Catego
           />
         </PieChart>
       </ResponsiveContainer>
-      {myLabel && (
-        <p className="text-center text-[10px] font-medium text-red-600 -mt-2">Saját: {myLabel}</p>
-      )}
     </div>
   )
 }

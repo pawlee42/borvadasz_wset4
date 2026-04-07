@@ -252,8 +252,22 @@ export default function LeaderDashboard() {
     fetchSubmissionCounts()
   }
 
+  const autoRevealedRef = useRef<Set<string>>(new Set())
+
   const activeWine = wines.find((w) => w.is_active)
   const nonLeaderCount = participants.filter((p) => !p.is_leader).length
+
+  // Auto-reveal when all participants have submitted
+  useEffect(() => {
+    if (!activeWine || activeWine.results_revealed || !participantId) return
+    if (nonLeaderCount <= 0) return
+    const currentCount = submissionCounts[activeWine.id] ?? 0
+    if (currentCount < nonLeaderCount) return
+    if (autoRevealedRef.current.has(activeWine.id)) return
+
+    autoRevealedRef.current.add(activeWine.id)
+    handleReveal(activeWine.id)
+  }, [submissionCounts, activeWine, nonLeaderCount, participantId])
 
   return (
     <div className="min-h-dvh bg-background">

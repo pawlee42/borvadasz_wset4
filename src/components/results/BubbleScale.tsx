@@ -40,7 +40,6 @@ export default function BubbleScale({ data, myValue }: BubbleScaleProps) {
                   height: size,
                   backgroundColor: seg.count > 0 ? COLORS[i % COLORS.length] : '#f5f0eb',
                   border: seg.count === 0 ? '1px dashed #d6d3d1' : 'none',
-                  boxShadow: myValue === i ? '0 0 0 3px #dc2626' : 'none',
                 }}
               >
                 {seg.count > 0 && (
@@ -62,8 +61,17 @@ export default function BubbleScale({ data, myValue }: BubbleScaleProps) {
       <div className="relative mt-1">
         <div className="h-[2px] bg-muted rounded w-full" />
         <div className="flex justify-between mt-1 text-[10px] text-muted-foreground">
-          {data.labels.map((label) => (
-            <span key={label} className="flex-1 text-center">{label}</span>
+          {data.labels.map((label, i) => (
+            <span
+              key={label}
+              className="flex-1 text-center"
+              style={{
+                color: myValue === i ? '#dc2626' : undefined,
+                fontWeight: myValue === i ? 700 : undefined,
+              }}
+            >
+              {label}
+            </span>
           ))}
         </div>
       </div>
