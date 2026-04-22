@@ -56,11 +56,13 @@ function generateVariants(region: string): string[] {
   variants.push(region)
   if (cleaned !== region) variants.push(cleaned)
 
-  // Split on / and try each part
-  if (region.includes('/')) {
-    for (const part of region.split('/')) {
-      const p = part.replace(WINE_SUFFIXES, '').replace(/\s+/g, ' ').trim()
-      if (p.length >= 3) variants.push(p)
+  // Split on / or , and try each part
+  for (const sep of ['/', ',']) {
+    if (region.includes(sep)) {
+      for (const part of region.split(sep)) {
+        const p = part.replace(WINE_SUFFIXES, '').replace(/\s+/g, ' ').trim()
+        if (p.length >= 3) variants.push(p)
+      }
     }
   }
 
