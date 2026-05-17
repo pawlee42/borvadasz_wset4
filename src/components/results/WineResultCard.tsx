@@ -72,6 +72,7 @@ export default function WineResultCard({
   return (
     <div
       id={`wine-result-${wine.id}`}
+      data-wine-card
       className="rounded-lg border border-border-visible/15 bg-white p-4 sm:p-6 print:break-inside-avoid print:shadow-none"
     >
       {/* Wine image + Radar side by side */}

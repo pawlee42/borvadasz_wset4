@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import type { Wine, Session } from '@/lib/types/database'
 import type { SATEvaluation } from '@/lib/types/sat'
@@ -21,16 +21,18 @@ interface WineWithEvaluations {
 
 export default function ResultsPage() {
   const params = useParams<{ code: string }>()
+  const searchParams = useSearchParams()
   const code = params.code
+  const isCapture = searchParams.get('capture') === '1'
   const { isLeader, participantId } = useSession(code)
   const [wineResults, setWineResults] = useState<WineWithEvaluations[]>([])
   const [sessionInfo, setSessionInfo] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     async function fetchResults() {
       try {
-        // Fetch session info
         const sessionRes = await fetch(`/api/session/${code}`)
         if (sessionRes.ok) {
           setSessionInfo(await sessionRes.json())
@@ -57,7 +59,6 @@ export default function ResultsPage() {
         }
         setWineResults(results)
 
-        // Scroll to specific wine if hash is present
         setTimeout(() => {
           const hash = window.location.hash.slice(1)
           if (hash) {
@@ -75,9 +76,29 @@ export default function ResultsPage() {
     fetchResults()
   }, [code, participantId])
 
-  const handlePrint = useCallback(() => {
-    window.print()
-  }, [])
+  const handleSaveImage = useCallback(async () => {
+    setSaving(true)
+    try {
+      const res = await fetch(`/api/session/${code}/capture`)
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        alert(err.error ?? 'Hiba történt a kép készítése közben.')
+        return
+      }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `borertekeles-${code}.png`
+      link.click()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('Mentés sikertelen:', err)
+      alert('Hiba történt a kép készítése közben.')
+    } finally {
+      setSaving(false)
+    }
+  }, [code])
 
   if (loading) {
     return (
@@ -97,25 +118,19 @@ export default function ResultsPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 p-4 print:max-w-none print:p-0">
-      <div className="flex items-center justify-between" data-print-hide>
-        <div className="flex items-center gap-3">
-          <Link
-            href={isLeader ? `/session/${code}/leader` : `/session/${code}/tasting`}
-            className="text-sm text-muted-foreground hover:text-foreground/80"
-          >
-            &larr; Vissza
-          </Link>
-          <h1 className="text-xl font-bold text-foreground">Kóstolás eredményei</h1>
+      {!isCapture && (
+        <div className="flex items-center justify-between" data-print-hide>
+          <div className="flex items-center gap-3">
+            <Link
+              href={isLeader ? `/session/${code}/leader` : `/session/${code}/tasting`}
+              className="text-sm text-muted-foreground hover:text-foreground/80"
+            >
+              &larr; Vissza
+            </Link>
+            <h1 className="text-xl font-bold text-foreground">Kóstolás eredményei</h1>
+          </div>
         </div>
-        {isLeader && (
-          <button
-            onClick={handlePrint}
-            className="rounded-md bg-stone-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-700"
-          >
-            PDF letöltése / Nyomtatás
-          </button>
-        )}
-      </div>
+      )}
 
       {sessionInfo && (sessionInfo.title || sessionInfo.event_date || sessionInfo.location) && (
         <div className="rounded-lg border border-border-visible/15 bg-white p-4 sm:p-6 flex items-center gap-4">
@@ -144,6 +159,25 @@ export default function ResultsPage() {
           myEvaluation={wr.myEvaluation}
         />
       ))}
+
+      {!isCapture && isLeader && (
+        <div className="pb-8" data-print-hide>
+          <button
+            onClick={handleSaveImage}
+            disabled={saving}
+            className="w-full py-4 px-4 bg-primary text-primary-foreground rounded-lg font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            {saving ? (
+              <>Kép készítése...</>
+            ) : (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Eredmények mentése képként
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
