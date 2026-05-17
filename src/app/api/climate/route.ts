@@ -9,6 +9,9 @@ const WINE_SUFFIXES = /\b(AOP|AOC|DOC|DOCG|DOCa|DO|AVA|IGP|IGT|VdP|GG|DAC|PDO|PG
 
 // Known wine region → geocoding-friendly name mappings
 const REGION_ALIASES: Record<string, string[]> = {
+  'neusiedlersee': ['Neusiedl am See'],
+  'niederösterreich': ['Krems an der Donau'],
+  'weinland': ['Retz'],
   'südsteiermark': ['Leibnitz'],
   'südtirol': ['Terlan'],
   'alto adige': ['Terlan'],
