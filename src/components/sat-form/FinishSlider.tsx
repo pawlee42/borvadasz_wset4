@@ -29,7 +29,7 @@ export function FinishSlider({ value, onChange, className }: FinishSliderProps) 
   const category = getCategory(value)
 
   return (
-    <div className={cn('space-y-2 px-[10%]', className)}>
+    <div className={cn('space-y-2 px-[5%]', className)}>
       <label className="text-sm font-medium text-foreground">
         Utóíz (másodperc)
       </label>
