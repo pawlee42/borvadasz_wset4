@@ -26,7 +26,7 @@ export function ConclusionsSection({
 
   return (
     <>
-      <div className="space-y-2">
+      <div className="space-y-2 px-[10%]">
         <label className="text-sm font-medium text-foreground">Minőség</label>
         <div className="text-center">
           <span className="text-2xl font-bold text-primary">{data.quality}</span>

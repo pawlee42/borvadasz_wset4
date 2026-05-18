@@ -26,7 +26,7 @@ export function Slider({
   const totalSteps = labels ? labels.length - 1 : Math.round((max - min) / step)
 
   return (
-    <div className={cn('w-full', className)}>
+    <div className={cn('w-full px-[10%]', className)}>
       <input
         type="range"
         name={name}
