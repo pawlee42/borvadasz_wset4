@@ -26,19 +26,9 @@ export function Slider({
   const totalSteps = labels ? labels.length - 1 : Math.round((max - min) / step)
 
   return (
-    <div className={cn('w-full px-[10%]', className)}>
-      <input
-        type="range"
-        name={name}
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full min-h-[44px]"
-      />
+    <div className={cn('w-full px-[5%]', className)}>
       {labels && (
-        <div className="relative w-full mt-1 px-[12px]">
+        <div className="relative w-full mb-1 px-[12px]">
           <div className="flex justify-between">
             {labels.map((label, i) => {
               const isActive = i === value
@@ -48,12 +38,6 @@ export function Slider({
                   className="flex flex-col items-center"
                   style={{ width: 0 }}
                 >
-                  <div
-                    className={cn(
-                      'w-1.5 h-1.5 rounded-full mb-1',
-                      isActive ? 'bg-primary' : 'bg-border'
-                    )}
-                  />
                   <span
                     className={cn(
                       'text-[11px] leading-tight text-center whitespace-nowrap',
@@ -64,12 +48,28 @@ export function Slider({
                   >
                     {label}
                   </span>
+                  <div
+                    className={cn(
+                      'w-1.5 h-1.5 rounded-full mt-1',
+                      isActive ? 'bg-primary' : 'bg-border'
+                    )}
+                  />
                 </div>
               )
             })}
           </div>
         </div>
       )}
+      <input
+        type="range"
+        name={name}
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-full min-h-[44px]"
+      />
     </div>
   )
 }
